@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intake Files — Sunshine State Injury Law</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;color:#1a1a1a;background:#f4f4f0;min-height:100vh}
+.wrap{max-width:960px;margin:0 auto;padding:1.5rem 1rem}
+.header{background:#1a56cc;color:#fff;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1.5rem}
+.firm{font-size:17px;font-weight:700}
+.sub{font-size:12px;opacity:.8;margin-top:3px}
+.card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1rem}
+.st{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #f0f0e8}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.photo-item{border-radius:10px;overflow:hidden;border:1px solid #e0e0d8;background:#f4f4f0;aspect-ratio:1;cursor:pointer;position:relative}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .15s}
+.photo-item:hover img{opacity:.9}
+.photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:11px;padding:4px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.video-item{border:1px solid #e0e0d8;border-radius:10px;overflow:hidden;background:#000}
+.video-item video{width:100%;max-height:300px;display:block}
+.video-name{font-size:12px;color:#888;padding:6px 10px;background:#f4f4f0}
+.empty{text-align:center;padding:2.5rem;color:#aaa;font-size:13px}
+.loading{text-align:center;padding:2.5rem;color:#888;font-size:13px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #e0e0d8;border-top-color:#1a56cc;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.client-info{font-size:14px;color:#1a1a1a;margin-bottom:4px;font-weight:600}
+.case-meta{font-size:12px;color:#888}
+.confidential{display:inline-block;background:#fee2e2;color:#991b1b;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;margin-top:6px}
+/* lightbox */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:999;align-items:center;justify-content:center;flex-direction:column}
+.lb.open{display:flex}
+.lb img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:8px}
+.lb-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;line-height:1;background:none;border:none;font-family:inherit}
+.lb-name{color:#ccc;font-size:12px;margin-top:10px}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:22px;cursor:pointer;padding:10px 14px;border-radius:8px;font-family:inherit}
+.lb-nav.prev{left:12px}
+.lb-nav.next{right:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="firm">Sunshine State Injury Law</div>
+    <div class="sub">Intake File Viewer</div>
+  </div>
+  <div id="main-content">
+    <div class="loading"><div class="spinner"></div>Loading files...</div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lightbox" onclick="closeLB(event)">
+  <button class="lb-close" onclick="closeLB()">&times;</button>
+  <button class="lb-nav prev" onclick="navLB(-1,event)">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-name" id="lb-name"></div>
+  <button class="lb-nav next" onclick="navLB(1,event)">&#8250;</button>
+</div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const FC={apiKey:"AIzaSyCThZhnjXqEfaU3uzslIOzFDt87uJDunxM",authDomain:"sunshine-state-intake.firebaseapp.com",projectId:"sunshine-state-intake",storageBucket:"sunshine-state-intake.firebasestorage.app",messagingSenderId:"467303269803",appId:"1:467303269803:web:244431784e72d0b0d07eee"};
+const fb=initializeApp(FC);const db=getFirestore(fb);
+
+const params=new URLSearchParams(window.location.search);
+const intakeId=params.get('id');
+const typeFilter=params.get('type'); // 'photos', 'videos', or null (all)
+
+let allPhotos=[];
+let lbIdx=0;
+
+window.openLB=(idx)=>{
+  lbIdx=idx;
+  document.getElementById('lb-img').src=allPhotos[idx].data;
+  document.getElementById('lb-name').textContent=allPhotos[idx].name;
+  document.getElementById('lightbox').classList.add('open');
+};
+window.closeLB=(e)=>{
+  if(e&&e.target!==document.getElementById('lightbox')&&!e.target.classList.contains('lb-close'))return;
+  document.getElementById('lightbox').classList.remove('open');
+};
+window.navLB=(dir,e)=>{
+  if(e)e.stopPropagation();
+  lbIdx=(lbIdx+dir+allPhotos.length)%allPhotos.length;
+  document.getElementById('lb-img').src=allPhotos[lbIdx].data;
+  document.getElementById('lb-name').textContent=allPhotos[lbIdx].name;
+};
+
+if(!intakeId){
+  document.getElementById('main-content').innerHTML='<div class="card"><div class="empty">No intake ID specified.</div></div>';
+} else {
+  try{
+    const snap=await getDoc(doc(db,'intakes',intakeId));
+    if(!snap.exists()||snap.data().deleted){
+      document.getElementById('main-content').innerHTML='<div class="card"><div class="empty">Intake not found or has been removed.</div></div>';
+    } else {
+      const i={id:snap.id,...snap.data()};
+      const photos=(i.files?.photos||[]).filter(f=>f.type&&f.type.startsWith('image/'));
+      const dlPhotos=(i.files?.dl||[]).filter(f=>f.type&&f.type.startsWith('image/'));
+      const regPhotos=(i.files?.reg||[]).filter(f=>f.type&&f.type.startsWith('image/'));
+      const allImgs=[...photos,...dlPhotos,...regPhotos];
+      const videos=i.files?.videos||[];
+      const dlDocs=(i.files?.dl||[]).filter(f=>!f.type||!f.type.startsWith('image/'));
+      const regDocs=(i.files?.reg||[]).filter(f=>!f.type||!f.type.startsWith('image/'));
+      allPhotos=allImgs;
+
+      const showPhotos=!typeFilter||typeFilter==='photos';
+      const showVideos=!typeFilter||typeFilter==='videos';
+
+      let html=`<div class="card">
+        <div class="client-info">${i.client?.fname||''} ${i.client?.lname||''}</div>
+        <div class="case-meta">${i.type||''} &bull; ${i.date||''} &bull; ${i.referral||'No referral source'}</div>
+        <div class="confidential">Confidential</div>
+      </div>`;
+
+      if(showPhotos){
+        html+=`<div class="card"><div class="st">Photos (${allImgs.length})</div>`;
+        if(!allImgs.length){html+='<div class="empty">No photos uploaded.</div>';}
+        else{html+=`<div class="photo-grid">${allImgs.map((f,idx)=>`<div class="photo-item" onclick="openLB(${idx})"><img src="${f.data}" alt="${f.name}" loading="lazy"><div class="photo-label">${f.name}</div></div>`).join('')}</div>`;}
+        html+='</div>';
+      }
+
+      if(showVideos){
+        html+=`<div class="card"><div class="st">Videos (${videos.length})</div>`;
+        if(!videos.length){html+='<div class="empty">No videos uploaded.</div>';}
+        else{html+=videos.map(f=>`<div class="video-item" style="margin-bottom:12px"><video controls preload="metadata"><source src="${f.data}" type="${f.type||'video/mp4'}"></video><div class="video-name">${f.name}</div></div>`).join('');}
+        html+='</div>';
+      }
+
+      if(dlDocs.length||regDocs.length){
+        const allDocs=[...dlDocs,...regDocs];
+        html+=`<div class="card"><div class="st">Documents (${allDocs.length})</div>`;
+        html+=allDocs.map(f=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0e8;font-size:13px"><span style="font-size:20px">&#x1F4C4;</span><a href="${f.data}" download="${f.name}" style="color:#1a56cc">${f.name}</a></div>`).join('');
+        html+='</div>';
+      }
+
+      document.getElementById('main-content').innerHTML=html;
+    }
+  }catch(e){
+    document.getElementById('main-content').innerHTML=`<div class="card"><div class="empty">Error loading files: ${e.message}</div></div>`;
+  }
+}
+</script>
+</body>
+</html>
