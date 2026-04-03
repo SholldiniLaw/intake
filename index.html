@@ -195,9 +195,19 @@ textarea{min-height:70px;resize:vertical}
 
   <!-- INTAKE FORM -->
   <div id="staff-intake">
-    <div class="toggle">
-      <button class="tb active" id="tb-bi" onclick="setCT('BI')">Bodily injury</button>
-      <button class="tb" id="tb-pd" onclick="setCT('PD')">Property damage</button>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="st">Case type — select all that apply</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a1a">
+          <input type="checkbox" id="cb-bi" onchange="updateCaseTypes()" checked style="width:18px;height:18px;cursor:pointer;accent-color:#1a56cc">
+          Bodily injury
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a1a">
+          <input type="checkbox" id="cb-pd" onchange="updateCaseTypes()" style="width:18px;height:18px;cursor:pointer;accent-color:#1a56cc">
+          Property damage (auto)
+        </label>
+      </div>
+      <div id="case-type-warn" style="display:none;font-size:12px;color:#c0392b;margin-top:8px">Please select at least one case type.</div>
     </div>
     <div class="prefill-banner" id="prefill-banner">
       <span>&#10003;</span><span id="prefill-banner-text">Accident details pre-filled.</span>
@@ -280,63 +290,42 @@ textarea{min-height:70px;resize:vertical}
       </div>
     </div>
     <div id="pd-section" style="display:none">
-      <div class="toggle" style="margin-bottom:.8rem">
-        <button class="tb active" id="tb-rp" onclick="setPDsub('realprop')">Real property</button>
-        <button class="tb" id="tb-auto" onclick="setPDsub('auto')">Auto / vehicle damage</button>
-      </div>
-      <div id="pd-realprop">
-        <div class="card"><div class="st">Property information</div><div class="g3">
-          <div class="field full"><label>Property address</label><input id="f-pa"></div>
-          <div class="field"><label>Property type</label><select id="f-pt"><option>Single family home</option><option>Condo unit</option><option>Condo association</option><option>Commercial</option><option>Investment property</option><option>Other</option></select></div>
-          <div class="field"><label>Owner name (if different)</label><input id="f-own"></div>
-          <div class="field"><label>Date of loss</label><input type="date" id="f-dol"></div>
-          <div class="field"><label>Cause of loss</label><select id="f-col"><option>Hurricane Ian</option><option>Hurricane Milton</option><option>Other hurricane/storm</option><option>Wind</option><option>Water / flood</option><option>Fire</option><option>Hail</option><option>Other</option></select></div>
-        </div></div>
-        <div class="card"><div class="st">Insurance &amp; claim</div><div class="g3">
-          <div class="field"><label>Carrier</label><input id="f-ic"></div>
-          <div class="field"><label>Policy #</label><input id="f-ipn"></div>
-          <div class="field"><label>Claim #</label><input id="f-icn"></div>
-          <div class="field"><label>Claim filed?</label><select id="f-cf"><option>Yes</option><option>No</option></select></div>
-          <div class="field"><label>Claim status</label><select id="f-cs"><option>Open</option><option>Denied</option><option>Underpaid</option><option>Closed</option><option>Unknown</option></select></div>
-          <div class="field"><label>Amount offered / paid</label><input id="f-ap" placeholder="$0"></div>
-          <div class="field"><label>Public adjuster?</label><select id="f-pa2"><option>No</option><option>Yes</option><option>Formerly</option></select></div>
-          <div class="field"><label>PA name</label><input id="f-pan"></div>
-          <div class="field"><label>Prior claims on property?</label><select id="f-pcp"><option>No</option><option>Yes</option><option>Unknown</option></select></div>
-        </div></div>
-        <div class="card"><div class="st">Damage &amp; contractors</div><div class="g2">
-          <div class="field full"><label>Damage description</label><textarea id="f-dd"></textarea></div>
-          <div class="field"><label>Contractor involved?</label><select id="f-coi"><option>No</option><option>Yes</option></select></div>
-          <div class="field"><label>Contractor name</label><input id="f-cn"></div>
-          <div class="field"><label>Insurance adjuster / IA</label><input id="f-ia"></div>
-        </div></div>
-      </div>
-      <div id="pd-auto" style="display:none">
-        <div class="card"><div class="st">Vehicle information</div><div class="g4">
-          <div class="field"><label>Year</label><input id="f-avy"></div>
-          <div class="field"><label>Make</label><input id="f-avm"></div>
-          <div class="field"><label>Model</label><input id="f-avmo"></div>
-          <div class="field"><label>VIN</label><input id="f-avin"></div>
-          <div class="field"><label>Ownership</label><select id="f-avo"><option>Owned</option><option>Leased</option><option>Borrowed / third-party</option><option>Rental</option></select></div>
-          <div class="field"><label>Lienholder / finance co.</label><input id="f-alh"></div>
-          <div class="field"><label>Rental company</label><input id="f-arc"></div>
-        </div></div>
-        <div class="card"><div class="st">Body shop &amp; repair</div><div class="g3">
-          <div class="field"><label>Body shop name</label><input id="f-bs"></div>
-          <div class="field"><label>Body shop address / city</label><input id="f-bsa"></div>
-          <div class="field"><label>Date dropped off</label><input type="date" id="f-bsd" onchange="calcDays()"></div>
-          <div class="field"><label>Date released / expected</label><input type="date" id="f-bsr" onchange="calcDays()"></div>
-          <div class="field"><label>Days in shop</label><input id="f-bsdays" placeholder="Auto-calculated"></div>
-          <div class="field"><label>Rental / loaner provided?</label><select id="f-bsrental"><option>No</option><option>Yes — by carrier</option><option>Yes — out of pocket</option></select></div>
-          <div class="field full"><label>Damage description</label><textarea id="f-add"></textarea></div>
-        </div></div>
-        <div class="card"><div class="st">Insurance</div><div class="g3">
-          <div class="field"><label>Client carrier</label><input id="f-acc"></div>
-          <div class="field"><label>Client claim #</label><input id="f-accn"></div>
-          <div class="field"><label>Adverse carrier</label><input id="f-aacc"></div>
-          <div class="field"><label>Adverse claim #</label><input id="f-aaccn"></div>
-          <div class="field"><label>Estimate amount</label><input id="f-aest" placeholder="$0"></div>
-        </div></div>
-      </div>
+      <div class="card"><div class="st">Accident details</div><div class="g3">
+        <div class="field"><label>Date of accident</label><input type="date" id="f-pd-ad"></div>
+        <div class="field"><label>Accident type</label><select id="f-pd-at"><option>Auto</option><option>Motorcycle</option><option>Truck</option><option>Pedestrian</option><option>Other</option></select></div>
+        <div class="field"><label>Police report filed?</label><select id="f-pd-pr"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+        <div class="field full"><label>Accident location</label><input id="f-pd-al" placeholder="Street, City, State"></div>
+        <div class="field"><label>Police report #</label><input id="f-pd-prn"></div>
+        <div class="field full"><label>Liability narrative</label><textarea id="f-pd-ln2" placeholder="Describe how the accident occurred..."></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Vehicle information (client's vehicle)</div><div class="g4">
+        <div class="field"><label>Year</label><input id="f-avy"></div>
+        <div class="field"><label>Make</label><input id="f-avm"></div>
+        <div class="field"><label>Model</label><input id="f-avmo"></div>
+        <div class="field"><label>VIN</label><input id="f-avin"></div>
+        <div class="field"><label>Ownership</label><select id="f-avo"><option>Owned</option><option>Leased</option><option>Borrowed / third-party</option><option>Rental</option></select></div>
+        <div class="field"><label>Lienholder / finance co.</label><input id="f-alh"></div>
+        <div class="field"><label>Rental company</label><input id="f-arc"></div>
+      </div></div>
+      <div class="card"><div class="st">Body shop &amp; repair</div><div class="g3">
+        <div class="field"><label>Body shop name</label><input id="f-bs"></div>
+        <div class="field"><label>Body shop address / city</label><input id="f-bsa"></div>
+        <div class="field"><label>Date dropped off</label><input type="date" id="f-bsd" onchange="calcDays()"></div>
+        <div class="field"><label>Date released / expected</label><input type="date" id="f-bsr" onchange="calcDays()"></div>
+        <div class="field"><label>Days in shop</label><input id="f-bsdays" placeholder="Auto-calculated"></div>
+        <div class="field"><label>Rental / loaner provided?</label><select id="f-bsrental"><option>No</option><option>Yes — by carrier</option><option>Yes — out of pocket</option></select></div>
+        <div class="field full"><label>Damage description</label><textarea id="f-add"></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Insurance</div><div class="g3">
+        <div class="field"><label>Client carrier</label><input id="f-acc"></div>
+        <div class="field"><label>Client policy #</label><input id="f-acpn"></div>
+        <div class="field"><label>Client claim #</label><input id="f-accn"></div>
+        <div class="field"><label>Adverse carrier</label><input id="f-aacc"></div>
+        <div class="field"><label>Adverse claim #</label><input id="f-aaccn"></div>
+        <div class="field"><label>Policy limits</label><input id="f-apl" placeholder="100/300"></div>
+        <div class="field"><label>At-fault party name</label><input id="f-aafp"></div>
+        <div class="field"><label>Estimate amount</label><input id="f-aest" placeholder="$0"></div>
+      </div></div>
     </div>
     <div class="card"><div class="st">Notes</div><div class="g2">
       <div class="field"><label>Intake date</label><input type="date" id="f-idate"></div>
@@ -361,7 +350,7 @@ textarea{min-height:70px;resize:vertical}
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="st" style="margin:0;border:none;padding:0">All intakes</div>
         <div style="display:flex;gap:6px">
-          <select id="fl-type" onchange="renderDash()" style="font-size:12px;padding:5px 8px"><option value="">All types</option><option value="BI">BI</option><option value="PD">PD</option></select>
+          <select id="fl-type" onchange="renderDash()" style="font-size:12px;padding:5px 8px"><option value="">All types</option><option value="BI">BI only</option><option value="PD">PD only</option><option value="BI+PD">BI + PD</option></select>
           <select id="fl-status" onchange="renderDash()" style="font-size:12px;padding:5px 8px"><option value="">All statuses</option><option>Intaked</option><option>Contacted</option><option>Retained</option><option>Not Moving Forward</option></select>
         </div>
       </div>
@@ -463,12 +452,18 @@ window.staffRegister=async()=>{
   if(pass.length<6){err.style.display='block';err.textContent='Password must be at least 6 characters.';return;}
   btn.disabled=true;btn.textContent='Creating account...';
   try{
-    const cs=await getDoc(doc(db,'appSettings','config'));
-    const vc=cs.exists()?(cs.data().inviteCode||'SUNSHINE2024'):'SUNSHINE2024';
-    if(code!==vc){err.style.display='block';err.textContent='Incorrect invite code. Please check with your manager.';btn.disabled=false;btn.textContent='Create account';return;}
-    const ss=await getDocs(collection(db,'staff'));
-    const isFirst=ss.empty;
+    const vc=code.trim();
     const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const staffSnap=await getDocs(collection(db,'staff'));
+    const isFirst=staffSnap.empty;
+    const configSnap=await getDoc(doc(db,'appSettings','config'));
+    const validCode=configSnap.exists()?(configSnap.data().inviteCode||'SUNSHINE2024'):'SUNSHINE2024';
+    if(vc!==validCode&&!isFirst){
+      await cred.user.delete();
+      await signOut(auth);
+      err.style.display='block';err.textContent='Incorrect invite code. Please check with your manager.';
+      btn.disabled=false;btn.textContent='Create account';return;
+    }
     await setDoc(doc(db,'staff',cred.user.uid),{name,email,isAdmin:isFirst,approved:isFirst,createdAt:serverTimestamp()});
     if(isFirst){ok.textContent='Account created! You are the first admin — signing you in...';ok.style.display='block';}
     else{ok.style.display='block';}
@@ -479,8 +474,8 @@ window.referralLogin=async()=>{const email=g('rl-email'),pass=g('rl-pass'),err=d
 window.logout=async()=>await signOut(auth);
 
 window.staffTab=t=>{['intake','dash','refs','admin'].forEach(x=>{const el=document.getElementById('staff-'+x);if(el)el.style.display=x===t?'':'none';const nb=document.getElementById('snav-'+x);if(nb)nb.classList.toggle('active',x===t);});if(t==='dash')renderDash();if(t==='refs')renderRefList();if(t==='admin')loadAdminData();if(t==='intake')resetForm();};
-window.setCT=t=>{caseType=t;['bi','pd'].forEach(x=>document.getElementById('tb-'+x).classList.toggle('active',x===t.toLowerCase()));document.getElementById('bi-section').style.display=t==='BI'?'':'none';document.getElementById('pd-section').style.display=t==='PD'?'':'none';};
-window.setPDsub=s=>{pdSub=s;document.getElementById('tb-rp').classList.toggle('active',s==='realprop');document.getElementById('tb-auto').classList.toggle('active',s==='auto');document.getElementById('pd-realprop').style.display=s==='realprop'?'':'none';document.getElementById('pd-auto').style.display=s==='auto'?'':'none';};
+window.updateCaseTypes=()=>{const bi=document.getElementById('cb-bi').checked,pd=document.getElementById('cb-pd').checked;document.getElementById('bi-section').style.display=bi?'':'none';document.getElementById('pd-section').style.display=pd?'':'none';document.getElementById('case-type-warn').style.display='none';};
+window.setPDsub=s=>{};
 window.handleFiles=(inputId,previewId,countId,bucket)=>{Array.from(document.getElementById(inputId).files).forEach(f=>{if(bucket==='videos'&&f.size>50*1024*1024)document.getElementById('video-warn').style.display='block';const r=new FileReader();r.onload=e=>{uf[bucket].push({name:f.name,type:f.type,data:e.target.result});rp(previewId,countId,bucket);};r.readAsDataURL(f);});};
 function rp(previewId,countId,bucket){const files=uf[bucket];document.getElementById(previewId).innerHTML=files.map((f,i)=>{if(f.type&&f.type.startsWith('image/'))return`<div class="file-thumb"><img src="${f.data}" title="${f.name}"><button class="file-remove" onclick="removeFile('${bucket}',${i},'${previewId}','${countId}')">&times;</button></div>`;const ext=f.name.split('.').pop().toUpperCase().slice(0,4);return`<div class="file-thumb-doc" style="position:relative"><div class="ext">${ext}</div><div class="fname">${f.name.slice(0,14)}</div><button class="file-remove" onclick="removeFile('${bucket}',${i},'${previewId}','${countId}')">&times;</button></div>`;}).join('');document.getElementById(countId).textContent=files.length?files.length+' file'+(files.length>1?'s':'')+' selected':'';}
 window.removeFile=(bucket,idx,previewId,countId)=>{uf[bucket].splice(idx,1);rp(previewId,countId,bucket);};
@@ -489,25 +484,41 @@ window.searchCompanions=()=>{const q=g('companion-search').toLowerCase(),results
 window.linkCompanion=id=>{if(!pc.includes(id)){pc.push(id);document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';renderLinkedCompanions();}};
 window.unlinkCompanion=id=>{pc=pc.filter(x=>x!==id);renderLinkedCompanions();};
 function renderLinkedCompanions(){document.getElementById('linked-companions').innerHTML=pc.map(id=>{const i=intakes.find(x=>x.id===id);if(!i)return'';return`<div class="companion-card"><div><div style="font-weight:600;font-size:13px">${i.client.fname} ${i.client.lname}</div><div style="font-size:11px;color:#666;margin-top:2px">${i.bi&&i.bi.accDate||i.date}</div></div><button class="btn-d" style="font-size:11px" onclick="unlinkCompanion('${id}')">Remove</button></div>`;}).join('');}
-window.createCompanionFrom=sourceId=>{const src=intakes.find(x=>x.id===sourceId);if(!src||!src.bi)return;staffTab('intake');resetForm();pfs=sourceId;sv('f-ad',src.bi.accDate);sv('f-at',src.bi.accType);sv('f-pr',src.bi.police);sv('f-prn',src.bi.policeNum);sv('f-al',src.bi.location);sv('f-ln2',src.bi.narrative);sv('f-vy',src.bi.vYear);sv('f-vm',src.bi.vMake);sv('f-vmo',src.bi.vModel);sv('f-vin',src.bi.vin);sv('f-vo',src.bi.ownership);sv('f-lh',src.bi.lienholder);sv('f-ac',src.bi.advCarrier);sv('f-acn',src.bi.advClaim);sv('f-pl',src.bi.limits);sv('f-afp',src.bi.atFault);sv('f-ref',src.referral);pc=[sourceId];renderLinkedCompanions();const banner=document.getElementById('prefill-banner');document.getElementById('prefill-banner-text').textContent='Accident details pre-filled from '+src.client.fname+' '+src.client.lname+"'s intake.";banner.style.display='flex';window.scrollTo({top:0,behavior:'smooth'});};
+window.createCompanionFrom=sourceId=>{const src=intakes.find(x=>x.id===sourceId);if(!src)return;staffTab('intake');resetForm();pfs=sourceId;
+  const biSrc=src.bi,autoSrc=src.auto;
+  const accDate=biSrc?.accDate||autoSrc?.accDate,accType=biSrc?.accType||autoSrc?.accType,police=biSrc?.police||autoSrc?.police,policeNum=biSrc?.policeNum||autoSrc?.policeNum,location=biSrc?.location||autoSrc?.location,narrative=biSrc?.narrative||autoSrc?.narrative,advCarrier=biSrc?.advCarrier||autoSrc?.advCarrier,advClaim=biSrc?.advClaim||autoSrc?.advClaim,limits=biSrc?.limits||autoSrc?.limits,atFault=biSrc?.atFault||autoSrc?.atFault;
+  sv('f-ad',accDate);sv('f-at',accType);sv('f-pr',police);sv('f-prn',policeNum);sv('f-al',location);sv('f-ln2',narrative);
+  sv('f-pd-ad',accDate);sv('f-pd-at',accType);sv('f-pd-pr',police);sv('f-pd-prn',policeNum);sv('f-pd-al',location);sv('f-pd-ln2',narrative);
+  if(biSrc){sv('f-vy',biSrc.vYear);sv('f-vm',biSrc.vMake);sv('f-vmo',biSrc.vModel);sv('f-vin',biSrc.vin);sv('f-vo',biSrc.ownership);sv('f-lh',biSrc.lienholder);}
+  sv('f-ac',advCarrier);sv('f-acn',advClaim);sv('f-pl',limits);sv('f-afp',atFault);
+  sv('f-aacc',advCarrier);sv('f-aaccn',advClaim);sv('f-apl',limits);sv('f-aafp',atFault);
+  sv('f-ref',src.referral);pc=[sourceId];renderLinkedCompanions();const banner=document.getElementById('prefill-banner');document.getElementById('prefill-banner-text').textContent='Accident details pre-filled from '+src.client.fname+' '+src.client.lname+"'s intake.";banner.style.display='flex';window.scrollTo({top:0,behavior:'smooth'});};
 window.clearPrefill=()=>{pfs=null;document.getElementById('prefill-banner').style.display='none';};
 
 window.saveIntake=async()=>{
   const fn=g('f-fn').trim(),ln=g('f-ln').trim();if(!fn&&!ln){alert('Please enter a client name.');return;}
+  const hasBi=document.getElementById('cb-bi').checked,hasPd=document.getElementById('cb-pd').checked;
+  if(!hasBi&&!hasPd){document.getElementById('case-type-warn').style.display='block';return;}
   const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Saving...';
   const today=new Date().toISOString().slice(0,10);
+  const caseType=hasBi&&hasPd?'BI+PD':hasBi?'BI':'PD';
   const intake={type:caseType,date:g('f-idate')||today,status:g('f-st')||'Intaked',referral:g('f-ref'),notes:g('f-notes'),companions:[...pc],enteredBy:cup?.name||cu?.email||'',client:{fname:fn,lname:ln,dob:g('f-dob'),phone:g('f-ph'),email:g('f-em'),address:g('f-addr'),pref:g('f-cp')},files:{dl:uf.dl.map(f=>({name:f.name,type:f.type,data:f.data})),reg:uf.reg.map(f=>({name:f.name,type:f.type,data:f.data})),photos:uf.photos.map(f=>({name:f.name,type:f.type,data:f.data})),videos:uf.videos.map(f=>({name:f.name,type:f.type,data:f.data}))},createdAt:serverTimestamp()};
-  if(caseType==='BI'){intake.bi={accDate:g('f-ad'),accType:g('f-at'),location:g('f-al'),police:g('f-pr'),policeNum:g('f-prn'),narrative:g('f-ln2'),vYear:g('f-vy'),vMake:g('f-vm'),vModel:g('f-vmo'),vin:g('f-vin'),ownership:g('f-vo'),lienholder:g('f-lh'),rental:g('f-rc'),clientCarrier:g('f-cc'),clientPolicy:g('f-cpn'),clientClaim:g('f-ccn'),advCarrier:g('f-ac'),advClaim:g('f-acn'),limits:g('f-pl'),atFault:g('f-afp'),er:g('f-er'),providers:g('f-tp'),txStatus:g('f-ts'),prior:g('f-pai'),injuries:g('f-inj'),employer:g('f-emp'),occupation:g('f-occ'),wages:g('f-lw'),timeMissed:g('f-tm')};}
-  else{intake.pdSub=pdSub;if(pdSub==='realprop'){intake.pd={propAddr:g('f-pa'),propType:g('f-pt'),owner:g('f-own'),lossDate:g('f-dol'),cause:g('f-col'),carrier:g('f-ic'),policyNum:g('f-ipn'),claimNum:g('f-icn'),claimFiled:g('f-cf'),claimStatus:g('f-cs'),amtPaid:g('f-ap'),pa:g('f-pa2'),paName:g('f-pan'),priorClaims:g('f-pcp'),damage:g('f-dd'),contractor:g('f-coi'),contractorName:g('f-cn'),adjuster:g('f-ia')};}else{intake.auto={year:g('f-avy'),make:g('f-avm'),model:g('f-avmo'),vin:g('f-avin'),ownership:g('f-avo'),lienholder:g('f-alh'),rentalCo:g('f-arc'),bodyShop:g('f-bs'),bodyShopAddr:g('f-bsa'),dropOff:g('f-bsd'),release:g('f-bsr'),daysInShop:g('f-bsdays'),rentalProvided:g('f-bsrental'),damage:g('f-add'),clientCarrier:g('f-acc'),clientClaim:g('f-accn'),advCarrier:g('f-aacc'),advClaim:g('f-aaccn'),estimate:g('f-aest')};}}
+  if(hasBi){intake.bi={accDate:g('f-ad'),accType:g('f-at'),location:g('f-al'),police:g('f-pr'),policeNum:g('f-prn'),narrative:g('f-ln2'),vYear:g('f-vy'),vMake:g('f-vm'),vModel:g('f-vmo'),vin:g('f-vin'),ownership:g('f-vo'),lienholder:g('f-lh'),rental:g('f-rc'),clientCarrier:g('f-cc'),clientPolicy:g('f-cpn'),clientClaim:g('f-ccn'),advCarrier:g('f-ac'),advClaim:g('f-acn'),limits:g('f-pl'),atFault:g('f-afp'),er:g('f-er'),providers:g('f-tp'),txStatus:g('f-ts'),prior:g('f-pai'),injuries:g('f-inj'),employer:g('f-emp'),occupation:g('f-occ'),wages:g('f-lw'),timeMissed:g('f-tm')};}
+  if(hasPd){intake.auto={accDate:g('f-pd-ad'),accType:g('f-pd-at'),location:g('f-pd-al'),police:g('f-pd-pr'),policeNum:g('f-pd-prn'),narrative:g('f-pd-ln2'),year:g('f-avy'),make:g('f-avm'),model:g('f-avmo'),vin:g('f-avin'),ownership:g('f-avo'),lienholder:g('f-alh'),rentalCo:g('f-arc'),bodyShop:g('f-bs'),bodyShopAddr:g('f-bsa'),dropOff:g('f-bsd'),release:g('f-bsr'),daysInShop:g('f-bsdays'),rentalProvided:g('f-bsrental'),damage:g('f-add'),clientCarrier:g('f-acc'),clientPolicy:g('f-acpn'),clientClaim:g('f-accn'),advCarrier:g('f-aacc'),advClaim:g('f-aaccn'),limits:g('f-apl'),atFault:g('f-aafp'),estimate:g('f-aest')};}
   try{const dr=await addDoc(collection(db,'intakes'),intake);for(const cid of pc){const cs=await getDoc(doc(db,'intakes',cid));if(cs.exists()){const ex=cs.data().companions||[];if(!ex.includes(dr.id))await updateDoc(doc(db,'intakes',cid),{companions:[...ex,dr.id]});}}flash('sb',true);resetForm();}catch(e){console.error(e);flash('eb',true);}
   btn.disabled=false;btn.textContent='Save intake';
 };
 
-function resetForm(){['f-fn','f-ln','f-ph','f-em','f-addr','f-ref','f-prn','f-al','f-ln2','f-vy','f-vm','f-vmo','f-vin','f-lh','f-rc','f-cc','f-cpn','f-ccn','f-ac','f-acn','f-pl','f-afp','f-er','f-tp','f-inj','f-emp','f-occ','f-tm','f-notes','f-dob','f-ad','f-pa','f-own','f-ic','f-ipn','f-icn','f-ap','f-pan','f-dd','f-cn','f-ia','f-avy','f-avm','f-avmo','f-avin','f-alh','f-arc','f-bs','f-bsa','f-bsdays','f-add','f-acc','f-accn','f-aacc','f-aaccn','f-aest'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-idate').value=new Date().toISOString().slice(0,10);uf={dl:[],reg:[],photos:[],videos:[]};['dl-preview','reg-preview','photo-preview','video-preview'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});['dl-count','reg-count','photo-count','video-count'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});document.getElementById('video-warn').style.display='none';pc=[];pfs=null;document.getElementById('linked-companions').innerHTML='';document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';document.getElementById('prefill-banner').style.display='none';}
+function resetForm(){['f-fn','f-ln','f-ph','f-em','f-addr','f-ref','f-prn','f-al','f-ln2','f-vy','f-vm','f-vmo','f-vin','f-lh','f-rc','f-cc','f-cpn','f-ccn','f-ac','f-acn','f-pl','f-afp','f-er','f-tp','f-inj','f-emp','f-occ','f-tm','f-notes','f-dob','f-ad','f-pd-ad','f-pd-al','f-pd-prn','f-pd-ln2','f-avy','f-avm','f-avmo','f-avin','f-alh','f-arc','f-bs','f-bsa','f-bsdays','f-add','f-acc','f-acpn','f-accn','f-aacc','f-aaccn','f-apl','f-aafp','f-aest'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-idate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('cb-bi').checked=true;document.getElementById('cb-pd').checked=false;
+  document.getElementById('bi-section').style.display='';document.getElementById('pd-section').style.display='none';
+  document.getElementById('case-type-warn').style.display='none';
+  uf={dl:[],reg:[],photos:[],videos:[]};['dl-preview','reg-preview','photo-preview','video-preview'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});['dl-count','reg-count','photo-count','video-count'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});document.getElementById('video-warn').style.display='none';pc=[];pfs=null;document.getElementById('linked-companions').innerHTML='';document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';document.getElementById('prefill-banner').style.display='none';};document.getElementById('f-idate').value=new Date().toISOString().slice(0,10);uf={dl:[],reg:[],photos:[],videos:[]};['dl-preview','reg-preview','photo-preview','video-preview'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});['dl-count','reg-count','photo-count','video-count'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});document.getElementById('video-warn').style.display='none';pc=[];pfs=null;document.getElementById('linked-companions').innerHTML='';document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';document.getElementById('prefill-banner').style.display='none';}
 
 function subscribeIntakes(){if(unsub){unsub();unsub=null;}unsub=onSnapshot(query(collection(db,'intakes'),orderBy('createdAt','desc')),snap=>{intakes=snap.docs.map(d=>({id:d.id,...d.data()}));if(document.getElementById('staff-dash').style.display!=='none')renderDash();});}
 
-function renderDash(){const tf=g('fl-type'),sf=g('fl-status'),list=intakes.filter(i=>(!tf||i.type===tf)&&(!sf||i.status===sf));const tot=intakes.length,bi=intakes.filter(i=>i.type==='BI').length,pd=intakes.filter(i=>i.type==='PD').length,ret=intakes.filter(i=>i.status==='Retained').length;document.getElementById('met-row').innerHTML=`<div class="met"><div class="mv">${tot}</div><div class="ml">Total intakes</div></div><div class="met"><div class="mv">${bi}</div><div class="ml">Bodily injury</div></div><div class="met"><div class="mv">${pd}</div><div class="ml">Property damage</div></div><div class="met"><div class="mv">${ret}</div><div class="ml">Retained</div></div>`;const el=document.getElementById('dash-list');if(!list.length){el.innerHTML='<div class="empty">No intakes found.</div>';return;}el.innerHTML=list.map(i=>{const fc=Object.values(i.files||{}).flat().length,cc=(i.companions||[]).length;return`<div class="row ${rc(i.status)}"><div style="flex:1"><div class="rn">${i.client.fname} ${i.client.lname}</div><div class="rm">${i.date} &bull; ${i.referral||'No referral'} &bull; ${i.client.phone||i.client.email||''}${fc?' &bull; '+fc+' file'+(fc>1?'s':''):''}${cc?' &bull; '+cc+' companion'+(cc>1?'s':''):''}${i.enteredBy?' &bull; '+i.enteredBy:''}</div><div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap"><span class="badge ${i.type.toLowerCase()}">${i.type}${i.pdSub==='auto'?' &mdash; Auto':''}</span><span class="badge ${sc(i.status)}">${i.status}</span>${cc?`<span class="companion-badge">&#128101; ${cc} companion${cc>1?'s':''}</span>`:''}</div></div><div class="ra"><select onchange="updStatus('${i.id}',this.value)" style="font-size:11px;padding:4px 6px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select><button class="btn" style="font-size:11px;padding:5px 10px" onclick="viewIntake('${i.id}','staff')">View</button>${i.type==='BI'?`<button class="btn" style="font-size:11px;padding:5px 10px;color:#5b21b6;border-color:#c4b5fd" onclick="createCompanionFrom('${i.id}')">+ Companion</button>`:''}<button class="btn-d" onclick="delIntake('${i.id}')">Delete</button></div></div>`;}).join('');document.getElementById('detail-panel').style.display='none';}
+function renderDash(){const tf=g('fl-type'),sf=g('fl-status'),list=intakes.filter(i=>(!tf||i.type===tf||i.type==='BI+PD')&&(!sf||i.status===sf));const tot=intakes.length,bi=intakes.filter(i=>i.type==='BI'||i.type==='BI+PD').length,pd=intakes.filter(i=>i.type==='PD'||i.type==='BI+PD').length,ret=intakes.filter(i=>i.status==='Retained').length;document.getElementById('met-row').innerHTML=`<div class="met"><div class="mv">${tot}</div><div class="ml">Total intakes</div></div><div class="met"><div class="mv">${bi}</div><div class="ml">Bodily injury</div></div><div class="met"><div class="mv">${pd}</div><div class="ml">Property damage</div></div><div class="met"><div class="mv">${ret}</div><div class="ml">Retained</div></div>`;const el=document.getElementById('dash-list');if(!list.length){el.innerHTML='<div class="empty">No intakes found.</div>';return;}el.innerHTML=list.map(i=>{const fc=Object.values(i.files||{}).flat().length,cc=(i.companions||[]).length;const typeBadge=i.type==='BI+PD'?`<span class="badge bi">BI</span> <span class="badge pd">PD</span>`:i.type==='BI'?`<span class="badge bi">BI</span>`:`<span class="badge pd">PD</span>`;return`<div class="row ${rc(i.status)}"><div style="flex:1"><div class="rn">${i.client.fname} ${i.client.lname}</div><div class="rm">${i.date} &bull; ${i.referral||'No referral'} &bull; ${i.client.phone||i.client.email||''}${fc?' &bull; '+fc+' file'+(fc>1?'s':''):''}${cc?' &bull; '+cc+' companion'+(cc>1?'s':''):''}${i.enteredBy?' &bull; '+i.enteredBy:''}</div><div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">${typeBadge}<span class="badge ${sc(i.status)}">${i.status}</span>${cc?`<span class="companion-badge">&#128101; ${cc} companion${cc>1?'s':''}</span>`:''}</div></div><div class="ra"><select onchange="updStatus('${i.id}',this.value)" style="font-size:11px;padding:4px 6px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select><button class="btn" style="font-size:11px;padding:5px 10px" onclick="viewIntake('${i.id}','staff')">View</button><button class="btn" style="font-size:11px;padding:5px 10px;color:#5b21b6;border-color:#c4b5fd" onclick="createCompanionFrom('${i.id}')">+ Companion</button><button class="btn-d" onclick="delIntake('${i.id}')">Delete</button></div></div>`;}).join('');document.getElementById('detail-panel').style.display='none';}
 
 window.updStatus=async(id,s)=>{try{await updateDoc(doc(db,'intakes',id),{status:s});}catch(e){console.error(e);}};
 window.delIntake=async id=>{if(!confirm('Delete this intake? This cannot be undone.'))return;try{const snap=await getDoc(doc(db,'intakes',id));if(snap.exists()){for(const cid of(snap.data().companions||[])){const cs=await getDoc(doc(db,'intakes',cid));if(cs.exists())await updateDoc(doc(db,'intakes',cid),{companions:(cs.data().companions||[]).filter(x=>x!==id)});}}await deleteDoc(doc(db,'intakes',id));}catch(e){console.error(e);}};
@@ -515,11 +526,11 @@ window.delIntake=async id=>{if(!confirm('Delete this intake? This cannot be undo
 function buildDetailHTML(i,ctx){let rows='';const r=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:'';rows+=r('Client',`${i.client.fname} ${i.client.lname}`);rows+=r('DOB',i.client.dob);rows+=r('Phone',i.client.phone);rows+=r('Email',i.client.email);rows+=r('Address',i.client.address);rows+=r('Preferred contact',i.client.pref);rows+=r('Referral source',i.referral);rows+=r('Intake date',i.date);rows+=r('Status',i.status);if(ctx==='staff')rows+=r('Entered by',i.enteredBy);if(i.companions&&i.companions.length){const links=i.companions.map(cid=>{const ci=intakes.find(x=>x.id===cid);return ci?`<span class="companion-badge" onclick="viewIntake('${cid}','${ctx}')">${ci.client.fname} ${ci.client.lname}</span>`:''}).join(' ');rows+=`<dt>Companion cases</dt><dd style="padding-top:4px">${links}${ctx==='staff'?` <button class="btn" style="font-size:11px;padding:3px 8px;margin-left:6px" onclick="createCompanionFrom('${i.id}')">+ Add</button>`:''}</dd>`;}else if(ctx==='staff'&&i.type==='BI'){rows+=`<dt>Companion cases</dt><dd><button class="btn" style="font-size:11px;padding:3px 8px" onclick="createCompanionFrom('${i.id}')">+ Create companion intake</button></dd>`;}
 if(i.bi){rows+=r('Accident date',i.bi.accDate);rows+=r('Type',i.bi.accType);rows+=r('Location',i.bi.location);rows+=r('Police report',i.bi.police+(i.bi.policeNum?' #'+i.bi.policeNum:''));rows+=r('Narrative',i.bi.narrative);rows+=r('Vehicle',[i.bi.vYear,i.bi.vMake,i.bi.vModel].filter(Boolean).join(' '));rows+=r('VIN',i.bi.vin);rows+=r('Ownership',i.bi.ownership);rows+=r('Lienholder',i.bi.lienholder);rows+=r('Client carrier',i.bi.clientCarrier+(i.bi.clientPolicy?' / '+i.bi.clientPolicy:'')+(i.bi.clientClaim?' / Claim: '+i.bi.clientClaim:''));rows+=r('Adverse carrier',i.bi.advCarrier+(i.bi.advClaim?' / Claim: '+i.bi.advClaim:''));rows+=r('Policy limits',i.bi.limits);rows+=r('At-fault party',i.bi.atFault);rows+=r('ER / hospital',i.bi.er);rows+=r('Providers',i.bi.providers);rows+=r('Treatment status',i.bi.txStatus);rows+=r('Prior accidents',i.bi.prior);rows+=r('Injuries',i.bi.injuries);rows+=r('Employer',i.bi.employer);rows+=r('Occupation',i.bi.occupation);rows+=r('Lost wages',i.bi.wages);rows+=r('Time missed',i.bi.timeMissed);}
 if(i.pd){rows+=r('Property',i.pd.propAddr);rows+=r('Type',i.pd.propType);rows+=r('Owner',i.pd.owner);rows+=r('Date of loss',i.pd.lossDate);rows+=r('Cause',i.pd.cause);rows+=r('Carrier',i.pd.carrier+(i.pd.policyNum?' / '+i.pd.policyNum:'')+(i.pd.claimNum?' / Claim: '+i.pd.claimNum:''));rows+=r('Claim status',i.pd.claimStatus);rows+=r('Amount paid',i.pd.amtPaid);rows+=r('Public adjuster',i.pd.pa+(i.pd.paName?' — '+i.pd.paName:''));rows+=r('Damage',i.pd.damage);rows+=r('Contractor',i.pd.contractor+(i.pd.contractorName?' — '+i.pd.contractorName:''));rows+=r('Adjuster',i.pd.adjuster);}
-if(i.auto){rows+=r('Vehicle',[i.auto.year,i.auto.make,i.auto.model].filter(Boolean).join(' '));rows+=r('VIN',i.auto.vin);rows+=r('Ownership',i.auto.ownership);rows+=r('Lienholder',i.auto.lienholder);rows+=r('Body shop',i.auto.bodyShop+(i.auto.bodyShopAddr?' — '+i.auto.bodyShopAddr:''));rows+=r('Dropped off',i.auto.dropOff);rows+=r('Released',i.auto.release);rows+=r('Days in shop',i.auto.daysInShop);rows+=r('Rental provided',i.auto.rentalProvided);rows+=r('Damage',i.auto.damage);rows+=r('Client carrier',i.auto.clientCarrier+(i.auto.clientClaim?' / '+i.auto.clientClaim:''));rows+=r('Adverse carrier',i.auto.advCarrier+(i.auto.advClaim?' / '+i.auto.advClaim:''));rows+=r('Estimate',i.auto.estimate);}
+if(i.auto){rows+=r('Accident date',i.auto.accDate);rows+=r('Type',i.auto.accType);rows+=r('Location',i.auto.location);rows+=r('Police report',i.auto.police+(i.auto.policeNum?' #'+i.auto.policeNum:''));rows+=r('Narrative',i.auto.narrative);rows+=r('Vehicle',[i.auto.year,i.auto.make,i.auto.model].filter(Boolean).join(' '));rows+=r('VIN',i.auto.vin);rows+=r('Ownership',i.auto.ownership);rows+=r('Lienholder',i.auto.lienholder);rows+=r('Body shop',i.auto.bodyShop+(i.auto.bodyShopAddr?' — '+i.auto.bodyShopAddr:''));rows+=r('Dropped off',i.auto.dropOff);rows+=r('Released',i.auto.release);rows+=r('Days in shop',i.auto.daysInShop);rows+=r('Rental provided',i.auto.rentalProvided);rows+=r('Damage',i.auto.damage);rows+=r('Client carrier',i.auto.clientCarrier+(i.auto.clientPolicy?' / '+i.auto.clientPolicy:'')+(i.auto.clientClaim?' / Claim: '+i.auto.clientClaim:''));rows+=r('Adverse carrier',i.auto.advCarrier+(i.auto.advClaim?' / Claim: '+i.auto.advClaim:''));rows+=r('Policy limits',i.auto.limits);rows+=r('At-fault party',i.auto.atFault);rows+=r('Estimate',i.auto.estimate);}
 if(i.files){const fSec=(label,files)=>{if(!files||!files.length)return'';return`<dt>${label}</dt><dd style="padding-top:4px">${files.map(f=>f.type&&f.type.startsWith('image/')?`<img src="${f.data}" class="img-thumb-view" title="${f.name}">`:`<span style="font-size:12px;color:#666;margin:3px 8px 3px 0">${f.name}</span>`).join('')}</dd>`;};rows+=fSec("Driver's license",i.files.dl);rows+=fSec('Vehicle registration',i.files.reg);rows+=fSec('Photos',i.files.photos);if(i.files.videos&&i.files.videos.length)rows+=r('Videos',i.files.videos.map(f=>f.name).join(', '));}
 if(ctx==='staff'&&i.notes)rows+=r('Internal notes',i.notes);return rows;}
 
-window.viewIntake=(id,ctx)=>{const i=intakes.find(x=>x.id===id);if(!i)return;const panelId=ctx==='staff'?'detail-panel':'ref-detail-panel';const panel=document.getElementById(panelId);panel.style.display='block';panel.innerHTML=`<div class="detail-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div><span style="font-weight:700;font-size:15px">${i.client.fname} ${i.client.lname}</span>&nbsp;<span class="badge ${i.type.toLowerCase()}">${i.type}${i.pdSub==='auto'?' &mdash; Auto':''}</span>&nbsp;<span class="badge ${sc(i.status)}">${i.status}</span>${(i.companions&&i.companions.length)?'&nbsp;<span class="companion-badge">&#128101; '+i.companions.length+' companion'+(i.companions.length>1?'s':'')+'</span>':''}</div><div style="display:flex;gap:6px;align-items:center">${ctx==='staff'?`<select onchange="updStatus('${i.id}',this.value)" style="font-size:12px;padding:5px 8px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select>`:''}<button class="btn" onclick="document.getElementById('${panelId}').style.display='none'">Close</button></div></div><dl class="dl-grid">${buildDetailHTML(i,ctx)}</dl></div>`;panel.scrollIntoView({behavior:'smooth',block:'start'});};
+window.viewIntake=(id,ctx)=>{const i=intakes.find(x=>x.id===id);if(!i)return;const panelId=ctx==='staff'?'detail-panel':'ref-detail-panel';const panel=document.getElementById(panelId);const tb=i.type==='BI+PD'?`<span class="badge bi">BI</span>&nbsp;<span class="badge pd">PD</span>`:i.type==='BI'?`<span class="badge bi">BI</span>`:`<span class="badge pd">PD</span>`;panel.style.display='block';panel.innerHTML=`<div class="detail-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div><span style="font-weight:700;font-size:15px">${i.client.fname} ${i.client.lname}</span>&nbsp;${tb}&nbsp;<span class="badge ${sc(i.status)}">${i.status}</span>${(i.companions&&i.companions.length)?'&nbsp;<span class="companion-badge">&#128101; '+i.companions.length+' companion'+(i.companions.length>1?'s':'')+'</span>':''}</div><div style="display:flex;gap:6px;align-items:center">${ctx==='staff'?`<select onchange="updStatus('${i.id}',this.value)" style="font-size:12px;padding:5px 8px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select>`:''}<button class="btn" onclick="document.getElementById('${panelId}').style.display='none'">Close</button></div></div><dl class="dl-grid">${buildDetailHTML(i,ctx)}</dl></div>`;panel.scrollIntoView({behavior:'smooth',block:'start'});};
 
 async function loadRefAccounts(){const snap=await getDocs(collection(db,'referralAccounts'));refAccounts=snap.docs.map(d=>({uid:d.id,...d.data()}));renderRefList();}
 function renderRefList(){const el=document.getElementById('ref-list');if(!refAccounts.length){el.innerHTML='<div class="empty">No referral accounts yet.</div>';return;}el.innerHTML=refAccounts.map(r=>`<div class="row"><div style="flex:1"><div class="rn">${r.name}</div><div class="rm">${r.email} &bull; ${intakes.filter(i=>i.referral&&i.referral.toLowerCase()===r.name.toLowerCase()).length} intakes linked</div></div><div class="ra"><button class="btn-d" onclick="delRef('${r.uid}')">Delete</button></div></div>`).join('');}
