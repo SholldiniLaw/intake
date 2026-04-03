@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine State Injury Law — Client Intake</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;color:#1a1a1a;background:#f4f4f0;min-height:100vh}
+.app{max-width:960px;margin:0 auto;padding:1.5rem 1rem}
+.header{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.firm-name{font-size:17px;font-weight:600}
+.firm-sub{font-size:12px;color:#888;margin-top:2px}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nb{background:transparent;border:1px solid #d0d0c8;border-radius:8px;padding:6px 13px;font-size:13px;cursor:pointer;color:#1a1a1a;font-family:inherit}
+.nb:hover{background:#f4f4f0}
+.nb.active{background:#e8f0fe;color:#1a56cc;border-color:#a8c0f0;font-weight:500}
+.card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1rem}
+.st{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f0f0e8}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:12px;color:#666;font-weight:500}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid #d0d0c8;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:#1a1a1a;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#1a56cc;box-shadow:0 0 0 3px rgba(26,86,204,.08)}
+textarea{min-height:70px;resize:vertical}
+.toggle{display:flex;border:1px solid #d0d0c8;border-radius:8px;overflow:hidden;margin-bottom:1rem}
+.tb{flex:1;padding:10px;border:none;background:transparent;cursor:pointer;font-size:13px;font-family:inherit;color:#1a1a1a;border-right:1px solid #e0e0d8}
+.tb:last-child{border-right:none}
+.tb.active{background:#e8f0fe;color:#1a56cc;font-weight:600}
+.btn{background:#fff;border:1px solid #d0d0c8;border-radius:8px;padding:7px 14px;font-size:13px;font-family:inherit;color:#1a1a1a;cursor:pointer}
+.btn:hover{background:#f4f4f0}
+.btn-p{background:#1a56cc;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600}
+.btn-p:hover{background:#1447aa}
+.btn-g{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600}
+.btn-g:hover{background:#15803d}
+.btn-d{background:#fff;border:1px solid #f0b0b0;border-radius:8px;padding:5px 10px;font-size:12px;font-family:inherit;color:#c0392b;cursor:pointer}
+.btn-d:hover{background:#fff5f5}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.bi{background:#fff3cd;color:#856404}
+.pd{background:#dbeafe;color:#1e40af}
+.intaked{background:#f3f4f6;color:#374151;border:1px solid #d1d5db}
+.contacted{background:#fef9c3;color:#854d0e}
+.retained{background:#dcfce7;color:#166534}
+.not-moving-forward{background:#fee2e2;color:#991b1b}
+.row-intaked{border-left:4px solid #d1d5db !important;border-radius:0 10px 10px 0 !important}
+.row-contacted{border-left:4px solid #facc15 !important;border-radius:0 10px 10px 0 !important}
+.row-retained{border-left:4px solid #22c55e !important;border-radius:0 10px 10px 0 !important}
+.row-not-moving-forward{border-left:4px solid #ef4444 !important;border-radius:0 10px 10px 0 !important}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1rem}
+@media(max-width:600px){.metrics{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}.header{flex-direction:column;align-items:flex-start}}
+.met{background:#fff;border:1px solid #e0e0d8;border-radius:10px;padding:.9rem;text-align:center}
+.mv{font-size:24px;font-weight:700}
+.ml{font-size:11px;color:#888;margin-top:2px}
+.row{border:1px solid #e0e0d8;border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;background:#fff}
+.row:hover{border-color:#c0c0b8}
+.rn{font-weight:600;font-size:13px}
+.rm{font-size:11px;color:#888;margin-top:2px}
+.ra{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.dl-grid{display:grid;grid-template-columns:minmax(0,160px) minmax(0,1fr);gap:5px 14px;font-size:12px}
+.dl-grid dt{color:#888}
+.dl-grid dd{word-break:break-word}
+.empty{text-align:center;padding:2.5rem;color:#aaa;font-size:13px}
+.sb{background:#d1f2eb;color:#0d6e4f;border:1px solid #a8e0ce;border-radius:8px;padding:9px 14px;font-size:13px;margin-bottom:1rem;display:none}
+.eb{background:#fde8e8;color:#c0392b;border:1px solid #f0b0b0;border-radius:8px;padding:9px 14px;font-size:13px;margin-bottom:1rem;display:none}
+.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1rem;min-height:60vh}
+.login-card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:2rem;width:100%;max-width:380px}
+.login-title{font-size:17px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:13px;color:#888;margin-bottom:1.5rem}
+.login-err{font-size:12px;color:#c0392b;margin-top:10px;display:none;font-weight:500}
+.login-ok{font-size:12px;color:#0d6e4f;margin-top:10px;display:none;font-weight:500}
+.upload-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.upload-section-title{font-size:12px;font-weight:600;margin-bottom:6px}
+.upload-zone{border:2px dashed #d0d0c8;border-radius:8px;padding:18px 12px;text-align:center;cursor:pointer;position:relative;transition:background .15s,border-color .15s}
+.upload-zone:hover{background:#f8f8f4;border-color:#a0a098}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:22px;margin-bottom:4px}
+.upload-label{font-size:12px;color:#888}
+.upload-label b{color:#1a56cc}
+.file-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.file-thumb{position:relative;width:74px;height:74px;border-radius:8px;overflow:hidden;border:1px solid #e0e0d8;flex-shrink:0}
+.file-thumb img{width:100%;height:100%;object-fit:cover}
+.file-thumb-doc{width:74px;height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f4f4f0;border-radius:8px;border:1px solid #e0e0d8;flex-shrink:0;position:relative}
+.file-thumb-doc .ext{font-size:13px;font-weight:700;color:#555}
+.file-thumb-doc .fname{font-size:9px;color:#888;margin-top:3px;text-align:center;padding:0 4px;word-break:break-all;line-height:1.2}
+.file-remove{position:absolute;top:3px;right:3px;width:17px;height:17px;background:#c0392b;color:#fff;border:none;border-radius:99px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;z-index:2}
+.upload-count{font-size:11px;color:#888;margin-top:5px}
+.warn{background:#fff3cd;color:#856404;border:1px solid #f0d060;border-radius:8px;padding:7px 12px;font-size:12px;margin-top:8px;display:none}
+.detail-card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1rem}
+.img-thumb-view{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #e0e0d8;display:inline-block;margin:3px}
+.companion-badge{display:inline-flex;align-items:center;gap:5px;background:#f0eaff;color:#5b21b6;border:1px solid #c4b5fd;border-radius:99px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;margin:2px}
+.companion-badge:hover{background:#e9d5ff}
+.companion-search-result{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+.companion-search-result:hover{background:#f4f4f0}
+.companion-card{background:#f9f7ff;border:1px solid #c4b5fd;border-radius:10px;padding:10px 14px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prefill-banner{background:#e8f0fe;border:1px solid #a8c0f0;border-radius:8px;padding:10px 14px;font-size:13px;color:#1a56cc;margin-bottom:1rem;display:none;align-items:center;gap:10px}
+.legend-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.leg-tile{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e0e0d8;border-radius:10px;padding:8px 14px;flex:1;min-width:140px}
+.leg-bar{width:4px;height:36px;border-radius:2px;flex-shrink:0}
+.leg-title{font-weight:600;font-size:12px}
+.leg-sub{font-size:11px;color:#888;margin-top:1px}
+.admin-badge{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:99px;padding:2px 8px;font-size:11px;font-weight:600;margin-left:6px}
+.pending-badge{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:99px;padding:2px 8px;font-size:11px;font-weight:600;margin-left:6px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #e0e0d8;border-top-color:#1a56cc;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pending-alert{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:14px 18px;margin-bottom:1rem;font-size:13px;color:#92400e}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<div id="screen-loading">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:80vh">
+    <div style="text-align:center;color:#888;font-size:14px"><div class="spinner"></div>Loading...</div>
+  </div>
+</div>
+
+<!-- STAFF LOGIN -->
+<div id="screen-staff-login" style="display:none">
+  <div class="header"><div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub">Staff Portal</div></div></div>
+  <div class="login-wrap"><div class="login-card">
+    <div class="login-title">Staff login</div>
+    <div class="login-sub">Sign in with your staff account.</div>
+    <div class="field" style="margin-bottom:10px"><label>Email</label><input type="email" id="sl-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')staffLogin()"></div>
+    <div class="field" style="margin-bottom:14px"><label>Password</label><input type="password" id="sl-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')staffLogin()"></div>
+    <button class="btn-p" style="width:100%" onclick="staffLogin()" id="sl-btn">Sign in</button>
+    <div class="login-err" id="sl-err">Invalid email or password.</div>
+    <div style="margin-top:16px;border-top:1px solid #f0f0e8;padding-top:14px;display:flex;flex-direction:column;gap:8px;text-align:center">
+      <button class="btn" style="font-size:12px;width:100%" onclick="showScreen('staff-register')">New staff member? Create account &rarr;</button>
+      <button class="btn" style="font-size:12px;width:100%" onclick="showScreen('referral-login')">Referral source portal &rarr;</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- STAFF REGISTER -->
+<div id="screen-staff-register" style="display:none">
+  <div class="header"><div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub">Create Staff Account</div></div></div>
+  <div class="login-wrap"><div class="login-card">
+    <div class="login-title">Create your account</div>
+    <div class="login-sub">You need the staff invite code from your manager. Once registered, your account will need manager approval before you can log in.</div>
+    <div class="field" style="margin-bottom:10px"><label>Invite code</label><input type="password" id="sr-code" placeholder="Staff invite code"></div>
+    <div class="field" style="margin-bottom:10px"><label>Your full name</label><input id="sr-name" placeholder="First Last"></div>
+    <div class="field" style="margin-bottom:10px"><label>Email</label><input type="email" id="sr-email" placeholder="you@email.com"></div>
+    <div class="field" style="margin-bottom:14px"><label>Choose a password</label><input type="password" id="sr-pass" placeholder="At least 6 characters"></div>
+    <button class="btn-p" style="width:100%" onclick="staffRegister()" id="sr-btn">Create account</button>
+    <div class="login-err" id="sr-err"></div>
+    <div class="login-ok" id="sr-ok">Account created! Your manager will approve your access shortly.</div>
+    <div style="margin-top:14px;text-align:center"><button class="btn" style="font-size:12px" onclick="showScreen('staff-login')">&larr; Back to login</button></div>
+  </div></div>
+</div>
+
+<!-- PENDING APPROVAL -->
+<div id="screen-pending" style="display:none">
+  <div class="header"><div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub">Staff Portal</div></div>
+    <button class="nb" onclick="logout()">Sign out</button>
+  </div>
+  <div class="login-wrap"><div class="login-card">
+    <div style="font-size:32px;text-align:center;margin-bottom:16px">&#9203;</div>
+    <div class="login-title" style="text-align:center">Pending approval</div>
+    <div class="login-sub" style="text-align:center;margin-top:8px">Your account has been created and is awaiting approval from a manager. You will be able to log in once approved. Please check back shortly.</div>
+    <button class="btn" style="width:100%;margin-top:1rem" onclick="logout()">Sign out</button>
+  </div></div>
+</div>
+
+<!-- REFERRAL LOGIN -->
+<div id="screen-referral-login" style="display:none">
+  <div class="header"><div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub">Referral Source Portal</div></div></div>
+  <div class="login-wrap"><div class="login-card">
+    <div class="login-title">Referral source portal</div>
+    <div class="login-sub">Log in to view the status of your referred matters.</div>
+    <div class="field" style="margin-bottom:10px"><label>Email</label><input type="email" id="rl-email" placeholder="you@firm.com" onkeydown="if(event.key==='Enter')referralLogin()"></div>
+    <div class="field" style="margin-bottom:14px"><label>Password</label><input type="password" id="rl-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')referralLogin()"></div>
+    <button class="btn-p" style="width:100%" onclick="referralLogin()" id="rl-btn">Sign in</button>
+    <div class="login-err" id="rl-err">Invalid email or password.</div>
+    <div style="margin-top:14px;text-align:center"><button class="btn" style="font-size:12px" onclick="showScreen('staff-login')">&larr; Staff login</button></div>
+  </div></div>
+</div>
+
+<!-- STAFF APP -->
+<div id="screen-staff" style="display:none">
+  <div class="header">
+    <div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub">Intake Management &mdash; <span id="staff-name-display">Staff</span></div></div>
+    <div class="nav">
+      <button class="nb active" id="snav-intake" onclick="staffTab('intake')">New intake</button>
+      <button class="nb" id="snav-dash" onclick="staffTab('dash')">Dashboard</button>
+      <button class="nb" id="snav-refs" onclick="staffTab('refs')">Referral accounts</button>
+      <button class="nb" id="snav-admin" onclick="staffTab('admin')" style="display:none">Admin</button>
+      <button class="nb" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <div id="sb" class="sb">Intake saved successfully.</div>
+  <div id="eb" class="eb">Error saving. Please try again.</div>
+
+  <!-- INTAKE FORM -->
+  <div id="staff-intake">
+    <div class="card" style="margin-bottom:1rem">
+      <div class="st">Case type — select all that apply</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a1a">
+          <input type="checkbox" id="cb-bi" onchange="updateCaseTypes()" checked style="width:18px;height:18px;cursor:pointer;accent-color:#1a56cc">
+          Bodily injury
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a1a">
+          <input type="checkbox" id="cb-pd" onchange="updateCaseTypes()" style="width:18px;height:18px;cursor:pointer;accent-color:#1a56cc">
+          Property damage (auto)
+        </label>
+      </div>
+      <div id="case-type-warn" style="display:none;font-size:12px;color:#c0392b;margin-top:8px">Please select at least one case type.</div>
+    </div>
+    <div class="prefill-banner" id="prefill-banner">
+      <span>&#10003;</span><span id="prefill-banner-text">Accident details pre-filled.</span>
+      <button class="btn" style="font-size:11px;padding:4px 10px;margin-left:auto" onclick="clearPrefill()">Clear</button>
+    </div>
+    <div class="card"><div class="st">Client information</div><div class="g3">
+      <div class="field"><label>First name</label><input id="f-fn" placeholder="First name"></div>
+      <div class="field"><label>Last name</label><input id="f-ln" placeholder="Last name"></div>
+      <div class="field"><label>Date of birth</label><input type="date" id="f-dob"></div>
+      <div class="field"><label>Phone</label><input id="f-ph" placeholder="(561) 555-0100"></div>
+      <div class="field"><label>Email</label><input id="f-em" placeholder="client@email.com"></div>
+      <div class="field"><label>Preferred contact</label><select id="f-cp"><option>Phone</option><option>Email</option><option>Text</option></select></div>
+      <div class="field full"><label>Address</label><input id="f-addr" placeholder="Street, City, State, Zip"></div>
+      <div class="field"><label>Referral source</label><input id="f-ref" placeholder="Name or firm"></div>
+      <div class="field"><label>Status</label><select id="f-st"><option>Intaked</option><option>Contacted</option><option>Retained</option><option>Not Moving Forward</option></select></div>
+    </div></div>
+    <div class="card"><div class="st">Documents &amp; media</div><div class="upload-grid">
+      <div><div class="upload-section-title">Driver's license</div>
+        <div class="upload-zone"><input type="file" id="dl-upload" accept="image/*,.pdf" multiple onchange="handleFiles('dl-upload','dl-preview','dl-count','dl')"><div class="upload-icon">&#x1F4C4;</div><div class="upload-label">Drop here or <b>browse</b></div></div>
+        <div class="file-grid" id="dl-preview"></div><div class="upload-count" id="dl-count"></div></div>
+      <div><div class="upload-section-title">Vehicle registration</div>
+        <div class="upload-zone"><input type="file" id="reg-upload" accept="image/*,.pdf" multiple onchange="handleFiles('reg-upload','reg-preview','reg-count','reg')"><div class="upload-icon">&#x1F4CB;</div><div class="upload-label">Drop here or <b>browse</b></div></div>
+        <div class="file-grid" id="reg-preview"></div><div class="upload-count" id="reg-count"></div></div>
+      <div><div class="upload-section-title">Photos</div>
+        <div class="upload-zone"><input type="file" id="photo-upload" accept="image/*" multiple onchange="handleFiles('photo-upload','photo-preview','photo-count','photos')"><div class="upload-icon">&#x1F4F7;</div><div class="upload-label">Drop here or <b>browse</b></div></div>
+        <div class="file-grid" id="photo-preview"></div><div class="upload-count" id="photo-count"></div></div>
+      <div><div class="upload-section-title">Videos</div>
+        <div class="upload-zone"><input type="file" id="video-upload" accept="video/*" multiple onchange="handleFiles('video-upload','video-preview','video-count','videos')"><div class="upload-icon">&#x1F3A5;</div><div class="upload-label">Drop here or <b>browse</b></div></div>
+        <div class="file-grid" id="video-preview"></div><div class="upload-count" id="video-count"></div>
+        <div class="warn" id="video-warn">&#9888; Large video files may be slow.</div></div>
+    </div></div>
+    <div id="bi-section">
+      <div class="card"><div class="st">Accident details</div><div class="g3">
+        <div class="field"><label>Date of accident</label><input type="date" id="f-ad"></div>
+        <div class="field"><label>Accident type</label><select id="f-at"><option>Auto</option><option>Slip &amp; fall</option><option>Premises liability</option><option>Motorcycle</option><option>Truck</option><option>Pedestrian</option><option>Other</option></select></div>
+        <div class="field"><label>Police report filed?</label><select id="f-pr"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+        <div class="field full"><label>Accident location</label><input id="f-al" placeholder="Street, City, State"></div>
+        <div class="field"><label>Police report #</label><input id="f-prn"></div>
+        <div class="field full"><label>Liability narrative</label><textarea id="f-ln2" placeholder="Describe how the accident occurred..."></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Vehicle information (client's vehicle)</div><div class="g4">
+        <div class="field"><label>Year</label><input id="f-vy" placeholder="2022"></div>
+        <div class="field"><label>Make</label><input id="f-vm"></div>
+        <div class="field"><label>Model</label><input id="f-vmo"></div>
+        <div class="field"><label>VIN</label><input id="f-vin"></div>
+        <div class="field"><label>Ownership</label><select id="f-vo"><option>Owned</option><option>Leased</option><option>Borrowed / third-party</option><option>Rental</option></select></div>
+        <div class="field"><label>Lienholder / finance co.</label><input id="f-lh"></div>
+        <div class="field"><label>Rental company</label><input id="f-rc"></div>
+      </div></div>
+      <div class="card"><div class="st">Insurance</div><div class="g3">
+        <div class="field"><label>Client carrier</label><input id="f-cc"></div>
+        <div class="field"><label>Client policy #</label><input id="f-cpn"></div>
+        <div class="field"><label>Client claim #</label><input id="f-ccn"></div>
+        <div class="field"><label>Adverse carrier</label><input id="f-ac"></div>
+        <div class="field"><label>Adverse claim #</label><input id="f-acn"></div>
+        <div class="field"><label>Policy limits</label><input id="f-pl" placeholder="100/300"></div>
+        <div class="field"><label>At-fault party name</label><input id="f-afp"></div>
+      </div></div>
+      <div class="card"><div class="st">Medical treatment</div><div class="g3">
+        <div class="field"><label>ER / hospital</label><input id="f-er"></div>
+        <div class="field"><label>Treating providers</label><input id="f-tp"></div>
+        <div class="field"><label>Treatment status</label><select id="f-ts"><option>Ongoing</option><option>Concluded</option><option>Not yet started</option></select></div>
+        <div class="field"><label>Prior accidents / injuries?</label><select id="f-pai"><option>No</option><option>Yes — same body part</option><option>Yes — different body part</option></select></div>
+        <div class="field full"><label>Injury description</label><textarea id="f-inj" placeholder="Describe injuries and complaints..."></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Lost wages / employment</div><div class="g4">
+        <div class="field"><label>Employer</label><input id="f-emp"></div>
+        <div class="field"><label>Occupation</label><input id="f-occ"></div>
+        <div class="field"><label>Lost wages claim?</label><select id="f-lw"><option>No</option><option>Yes</option><option>Unknown</option></select></div>
+        <div class="field"><label>Time missed from work</label><input id="f-tm" placeholder="e.g. 2 weeks"></div>
+      </div></div>
+      <div class="card" id="companion-section">
+        <div class="st">Companion cases</div>
+        <p style="font-size:13px;color:#666;margin-bottom:12px">Link other victims from the same accident.</p>
+        <div style="position:relative">
+          <input id="companion-search" placeholder="Search by client name..." oninput="searchCompanions()" autocomplete="off">
+          <div id="companion-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #d0d0c8;border-radius:8px;z-index:10;margin-top:4px;box-shadow:0 4px 12px rgba(0,0,0,.08);max-height:200px;overflow-y:auto"></div>
+        </div>
+        <div id="linked-companions" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div id="pd-section" style="display:none">
+      <div class="card"><div class="st">Accident details</div><div class="g3">
+        <div class="field"><label>Date of accident</label><input type="date" id="f-pd-ad"></div>
+        <div class="field"><label>Accident type</label><select id="f-pd-at"><option>Auto</option><option>Motorcycle</option><option>Truck</option><option>Pedestrian</option><option>Other</option></select></div>
+        <div class="field"><label>Police report filed?</label><select id="f-pd-pr"><option>Yes</option><option>No</option><option>Unknown</option></select></div>
+        <div class="field full"><label>Accident location</label><input id="f-pd-al" placeholder="Street, City, State"></div>
+        <div class="field"><label>Police report #</label><input id="f-pd-prn"></div>
+        <div class="field full"><label>Liability narrative</label><textarea id="f-pd-ln2" placeholder="Describe how the accident occurred..."></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Vehicle information (client's vehicle)</div><div class="g4">
+        <div class="field"><label>Year</label><input id="f-avy"></div>
+        <div class="field"><label>Make</label><input id="f-avm"></div>
+        <div class="field"><label>Model</label><input id="f-avmo"></div>
+        <div class="field"><label>VIN</label><input id="f-avin"></div>
+        <div class="field"><label>Ownership</label><select id="f-avo"><option>Owned</option><option>Leased</option><option>Borrowed / third-party</option><option>Rental</option></select></div>
+        <div class="field"><label>Lienholder / finance co.</label><input id="f-alh"></div>
+        <div class="field"><label>Rental company</label><input id="f-arc"></div>
+      </div></div>
+      <div class="card"><div class="st">Body shop &amp; repair</div><div class="g3">
+        <div class="field"><label>Body shop name</label><input id="f-bs"></div>
+        <div class="field"><label>Body shop address / city</label><input id="f-bsa"></div>
+        <div class="field"><label>Date dropped off</label><input type="date" id="f-bsd" onchange="calcDays()"></div>
+        <div class="field"><label>Date released / expected</label><input type="date" id="f-bsr" onchange="calcDays()"></div>
+        <div class="field"><label>Days in shop</label><input id="f-bsdays" placeholder="Auto-calculated"></div>
+        <div class="field"><label>Rental / loaner provided?</label><select id="f-bsrental"><option>No</option><option>Yes — by carrier</option><option>Yes — out of pocket</option></select></div>
+        <div class="field full"><label>Damage description</label><textarea id="f-add"></textarea></div>
+      </div></div>
+      <div class="card"><div class="st">Insurance</div><div class="g3">
+        <div class="field"><label>Client carrier</label><input id="f-acc"></div>
+        <div class="field"><label>Client policy #</label><input id="f-acpn"></div>
+        <div class="field"><label>Client claim #</label><input id="f-accn"></div>
+        <div class="field"><label>Adverse carrier</label><input id="f-aacc"></div>
+        <div class="field"><label>Adverse claim #</label><input id="f-aaccn"></div>
+        <div class="field"><label>Policy limits</label><input id="f-apl" placeholder="100/300"></div>
+        <div class="field"><label>At-fault party name</label><input id="f-aafp"></div>
+        <div class="field"><label>Estimate amount</label><input id="f-aest" placeholder="$0"></div>
+      </div></div>
+    </div>
+    <div class="card"><div class="st">Notes</div><div class="g2">
+      <div class="field"><label>Intake date</label><input type="date" id="f-idate"></div>
+      <div class="field"></div>
+      <div class="field full"><label>Internal notes (not visible to referral sources)</label><textarea id="f-notes" placeholder="Staff notes, follow-up reminders, etc."></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="btn-p" id="save-btn" onclick="saveIntake()">Save intake</button>
+    </div></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="staff-dash" style="display:none">
+    <div class="metrics" id="met-row"></div>
+    <div class="legend-row">
+      <div class="leg-tile"><div class="leg-bar" style="background:#d1d5db"></div><div><div class="leg-title">Intaked</div><div class="leg-sub">Received — not yet contacted</div></div></div>
+      <div class="leg-tile"><div class="leg-bar" style="background:#facc15"></div><div><div class="leg-title">Contacted</div><div class="leg-sub">Reached — decision pending</div></div></div>
+      <div class="leg-tile"><div class="leg-bar" style="background:#22c55e"></div><div><div class="leg-title">Retained</div><div class="leg-sub">Signed — active client</div></div></div>
+      <div class="leg-tile"><div class="leg-bar" style="background:#ef4444"></div><div><div class="leg-title">Not moving forward</div><div class="leg-sub">Contacted — chose not to proceed</div></div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="st" style="margin:0;border:none;padding:0">All intakes</div>
+        <div style="display:flex;gap:6px">
+          <select id="fl-type" onchange="renderDash()" style="font-size:12px;padding:5px 8px"><option value="">All types</option><option value="BI">BI only</option><option value="PD">PD only</option><option value="BI+PD">BI + PD</option></select>
+          <select id="fl-status" onchange="renderDash()" style="font-size:12px;padding:5px 8px"><option value="">All statuses</option><option>Intaked</option><option>Contacted</option><option>Retained</option><option>Not Moving Forward</option></select>
+        </div>
+      </div>
+      <div id="dash-list"></div>
+    </div>
+    <div id="detail-panel"></div>
+  </div>
+
+  <!-- REFERRAL ACCOUNTS -->
+  <div id="staff-refs" style="display:none">
+    <div class="card">
+      <div class="st">Referral source accounts</div>
+      <p style="font-size:13px;color:#666;margin-bottom:14px">Create a login for each referral source. Their display name must match the "Referral source" field on intakes exactly.</p>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="field"><label>Display name / firm</label><input id="rn-name" placeholder="e.g. Bowen and Bowen"></div>
+        <div class="field"><label>Their login email</label><input type="email" id="rn-email" placeholder="contact@firm.com"></div>
+        <div class="field"><label>Create a password for them</label><input type="password" id="rn-pass" placeholder="Min. 6 characters"></div>
+      </div>
+      <button class="btn-p" onclick="addRef()" id="ref-create-btn">Create account</button>
+      <div id="ref-msg" style="font-size:13px;margin-top:10px;display:none"></div>
+      <div id="ref-list" style="margin-top:16px"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="staff-admin" style="display:none">
+    <div class="card">
+      <div class="st">Pending approvals</div>
+      <p style="font-size:13px;color:#666;margin-bottom:12px">Staff members who have registered with the invite code but not yet been approved.</p>
+      <div id="admin-pending-list"><div class="empty">No pending approvals.</div></div>
+    </div>
+    <div class="card">
+      <div class="st">Active staff accounts</div>
+      <div id="admin-staff-list"></div>
+    </div>
+    <div class="card">
+      <div class="st">Staff invite code</div>
+      <p style="font-size:13px;color:#666;margin-bottom:12px">Share this privately with new staff. Change it anytime to prevent new registrations with the old code.</p>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="field"><label>Current invite code</label><input id="admin-code-display" readonly style="background:#f4f4f0;font-family:monospace;letter-spacing:0.05em"></div>
+        <div class="field"><label>Set new invite code</label><input id="admin-new-code" placeholder="Type a new code here"></div>
+      </div>
+      <button class="btn-p" onclick="updateInviteCode()">Update invite code</button>
+      <div id="admin-code-msg" style="font-size:13px;margin-top:8px;display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERRAL PORTAL -->
+<div id="screen-referral" style="display:none">
+  <div class="header">
+    <div><div class="firm-name">Sunshine State Injury Law</div><div class="firm-sub" id="ref-portal-sub">Referral Source Portal</div></div>
+    <button class="nb" onclick="logout()">Sign out</button>
+  </div>
+  <div class="metrics" id="ref-met-row"></div>
+  <div class="card"><div class="st" style="margin-bottom:12px">Your referred matters</div><div id="ref-intake-list"></div></div>
+  <div id="ref-detail-panel"></div>
+</div>
+
+</div>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import{getFirestore,collection,doc,addDoc,getDoc,getDocs,setDoc,updateDoc,deleteDoc,query,where,orderBy,onSnapshot,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const FC={apiKey:"AIzaSyCThZhnjXqEfaU3uzslIOzFDt87uJDunxM",authDomain:"sunshine-state-intake.firebaseapp.com",projectId:"sunshine-state-intake",storageBucket:"sunshine-state-intake.firebasestorage.app",messagingSenderId:"467303269803",appId:"1:467303269803:web:244431784e72d0b0d07eee"};
+const fb=initializeApp(FC);const auth=getAuth(fb);const db=getFirestore(fb);
+let cu=null,cup=null,isStaff=false,isAdmin=false,intakes=[],refAccounts=[],caseType='BI',pdSub='realprop',uf={dl:[],reg:[],photos:[],videos:[]},pc=[],pfs=null,unsub=null;
+window.showScreen=s=>{['loading','staff-login','staff-register','pending','referral-login','staff','referral'].forEach(id=>{const el=document.getElementById('screen-'+id);if(el)el.style.display=id===s?'':'none';});};
+function sc(s){if(s==='Retained')return'retained';if(s==='Contacted')return'contacted';if(s==='Not Moving Forward')return'not-moving-forward';return'intaked';}
+function rc(s){if(s==='Retained')return'row-retained';if(s==='Contacted')return'row-contacted';if(s==='Not Moving Forward')return'row-not-moving-forward';return'row-intaked';}
+function g(id){return(document.getElementById(id)||{}).value||'';}
+function sv(id,val){const el=document.getElementById(id);if(el&&val)el.value=val;}
+function flash(id,show){const el=document.getElementById(id);if(el){el.style.display=show?'block':'none';if(show)setTimeout(()=>el.style.display='none',3500);}}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){cu=null;cup=null;isStaff=false;isAdmin=false;if(unsub){unsub();unsub=null;}showScreen('staff-login');return;}
+  cu=user;
+  try{
+  const ss=await getDoc(doc(db,'staff',user.uid));
+  if(ss.exists()){
+    cup=ss.data();
+    if(cup.approved===false){showScreen('pending');return;}
+    isStaff=true;isAdmin=cup.isAdmin===true;
+    document.getElementById('staff-name-display').textContent=cup.name||user.email;
+    document.getElementById('snav-admin').style.display=isAdmin?'':'none';
+    showScreen('staff');staffTab('intake');subscribeIntakes();loadRefAccounts();if(isAdmin)loadAdminData();return;
+  }
+  const rs=await getDoc(doc(db,'referralAccounts',user.uid));
+  if(rs.exists()){cup=rs.data();isStaff=false;document.getElementById('ref-portal-sub').textContent='Welcome, '+cup.name;showScreen('referral');loadRefPortal(cup.name);return;}
+  await signOut(auth);showScreen('staff-login');
+  }catch(e){console.error('Auth load error:',e);await signOut(auth);showScreen('staff-login');}
+});
+
+window.staffLogin=async()=>{const email=g('sl-email'),pass=g('sl-pass'),err=document.getElementById('sl-err'),btn=document.getElementById('sl-btn');err.style.display='none';btn.disabled=true;btn.textContent='Signing in...';try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){err.style.display='block';err.textContent='Invalid email or password.';}btn.disabled=false;btn.textContent='Sign in';};
+
+window.staffRegister=async()=>{
+  const code=g('sr-code'),name=g('sr-name').trim(),email=g('sr-email').trim(),pass=g('sr-pass');
+  const err=document.getElementById('sr-err'),ok=document.getElementById('sr-ok'),btn=document.getElementById('sr-btn');
+  err.style.display='none';ok.style.display='none';
+  if(!code||!name||!email||!pass){err.style.display='block';err.textContent='Please fill in all fields.';return;}
+  if(pass.length<6){err.style.display='block';err.textContent='Password must be at least 6 characters.';return;}
+  btn.disabled=true;btn.textContent='Creating account...';
+  try{
+    const vc=code.trim();
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const staffSnap=await getDocs(collection(db,'staff'));
+    const isFirst=staffSnap.empty;
+    const configSnap=await getDoc(doc(db,'appSettings','config'));
+    const validCode=configSnap.exists()?(configSnap.data().inviteCode||'SUNSHINE2024'):'SUNSHINE2024';
+    if(vc!==validCode&&!isFirst){
+      await cred.user.delete();
+      await signOut(auth);
+      err.style.display='block';err.textContent='Incorrect invite code. Please check with your manager.';
+      btn.disabled=false;btn.textContent='Create account';return;
+    }
+    await setDoc(doc(db,'staff',cred.user.uid),{name,email,isAdmin:isFirst,approved:isFirst,createdAt:serverTimestamp()});
+    if(isFirst){ok.textContent='Account created! You are the first admin — signing you in...';ok.style.display='block';}
+    else{ok.style.display='block';}
+  }catch(e){err.style.display='block';err.textContent=e.code==='auth/email-already-in-use'?'That email already has an account.':'Error: '+e.message;btn.disabled=false;btn.textContent='Create account';}
+};
+
+window.referralLogin=async()=>{const email=g('rl-email'),pass=g('rl-pass'),err=document.getElementById('rl-err'),btn=document.getElementById('rl-btn');err.style.display='none';btn.disabled=true;btn.textContent='Signing in...';try{await signInWithEmailAndPassword(auth,email,pass);}catch(e){err.style.display='block';err.textContent='Invalid email or password.';}btn.disabled=false;btn.textContent='Sign in';};
+window.logout=async()=>await signOut(auth);
+
+window.staffTab=t=>{['intake','dash','refs','admin'].forEach(x=>{const el=document.getElementById('staff-'+x);if(el)el.style.display=x===t?'':'none';const nb=document.getElementById('snav-'+x);if(nb)nb.classList.toggle('active',x===t);});if(t==='dash')renderDash();if(t==='refs')renderRefList();if(t==='admin')loadAdminData();if(t==='intake')resetForm();};
+window.updateCaseTypes=()=>{const bi=document.getElementById('cb-bi').checked,pd=document.getElementById('cb-pd').checked;document.getElementById('bi-section').style.display=bi?'':'none';document.getElementById('pd-section').style.display=pd?'':'none';document.getElementById('case-type-warn').style.display='none';};
+window.setPDsub=s=>{};
+window.handleFiles=(inputId,previewId,countId,bucket)=>{Array.from(document.getElementById(inputId).files).forEach(f=>{if(bucket==='videos'&&f.size>50*1024*1024)document.getElementById('video-warn').style.display='block';const r=new FileReader();r.onload=e=>{uf[bucket].push({name:f.name,type:f.type,data:e.target.result});rp(previewId,countId,bucket);};r.readAsDataURL(f);});};
+function rp(previewId,countId,bucket){const files=uf[bucket];document.getElementById(previewId).innerHTML=files.map((f,i)=>{if(f.type&&f.type.startsWith('image/'))return`<div class="file-thumb"><img src="${f.data}" title="${f.name}"><button class="file-remove" onclick="removeFile('${bucket}',${i},'${previewId}','${countId}')">&times;</button></div>`;const ext=f.name.split('.').pop().toUpperCase().slice(0,4);return`<div class="file-thumb-doc" style="position:relative"><div class="ext">${ext}</div><div class="fname">${f.name.slice(0,14)}</div><button class="file-remove" onclick="removeFile('${bucket}',${i},'${previewId}','${countId}')">&times;</button></div>`;}).join('');document.getElementById(countId).textContent=files.length?files.length+' file'+(files.length>1?'s':'')+' selected':'';}
+window.removeFile=(bucket,idx,previewId,countId)=>{uf[bucket].splice(idx,1);rp(previewId,countId,bucket);};
+window.calcDays=()=>{const d1=g('f-bsd'),d2=g('f-bsr');if(d1&&d2){const diff=Math.round((new Date(d2)-new Date(d1))/86400000);document.getElementById('f-bsdays').value=diff>=0?diff+' days':'';}};
+window.searchCompanions=()=>{const q=g('companion-search').toLowerCase(),results=document.getElementById('companion-results');if(q.length<2){results.style.display='none';return;}const matches=intakes.filter(i=>i.type==='BI'&&!pc.includes(i.id)&&(i.client.fname+' '+i.client.lname).toLowerCase().includes(q));if(!matches.length){results.style.display='none';return;}results.style.display='block';results.innerHTML=matches.map(i=>`<div class="companion-search-result" onclick="linkCompanion('${i.id}')"><span><strong>${i.client.fname} ${i.client.lname}</strong> — ${i.date}</span><span style="font-size:11px;color:#888">${i.bi&&i.bi.accType||''}</span></div>`).join('');};
+window.linkCompanion=id=>{if(!pc.includes(id)){pc.push(id);document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';renderLinkedCompanions();}};
+window.unlinkCompanion=id=>{pc=pc.filter(x=>x!==id);renderLinkedCompanions();};
+function renderLinkedCompanions(){document.getElementById('linked-companions').innerHTML=pc.map(id=>{const i=intakes.find(x=>x.id===id);if(!i)return'';return`<div class="companion-card"><div><div style="font-weight:600;font-size:13px">${i.client.fname} ${i.client.lname}</div><div style="font-size:11px;color:#666;margin-top:2px">${i.bi&&i.bi.accDate||i.date}</div></div><button class="btn-d" style="font-size:11px" onclick="unlinkCompanion('${id}')">Remove</button></div>`;}).join('');}
+window.createCompanionFrom=sourceId=>{const src=intakes.find(x=>x.id===sourceId);if(!src)return;staffTab('intake');resetForm();pfs=sourceId;
+  const biSrc=src.bi,autoSrc=src.auto;
+  const accDate=biSrc?.accDate||autoSrc?.accDate,accType=biSrc?.accType||autoSrc?.accType,police=biSrc?.police||autoSrc?.police,policeNum=biSrc?.policeNum||autoSrc?.policeNum,location=biSrc?.location||autoSrc?.location,narrative=biSrc?.narrative||autoSrc?.narrative,advCarrier=biSrc?.advCarrier||autoSrc?.advCarrier,advClaim=biSrc?.advClaim||autoSrc?.advClaim,limits=biSrc?.limits||autoSrc?.limits,atFault=biSrc?.atFault||autoSrc?.atFault;
+  sv('f-ad',accDate);sv('f-at',accType);sv('f-pr',police);sv('f-prn',policeNum);sv('f-al',location);sv('f-ln2',narrative);
+  sv('f-pd-ad',accDate);sv('f-pd-at',accType);sv('f-pd-pr',police);sv('f-pd-prn',policeNum);sv('f-pd-al',location);sv('f-pd-ln2',narrative);
+  if(biSrc){sv('f-vy',biSrc.vYear);sv('f-vm',biSrc.vMake);sv('f-vmo',biSrc.vModel);sv('f-vin',biSrc.vin);sv('f-vo',biSrc.ownership);sv('f-lh',biSrc.lienholder);}
+  sv('f-ac',advCarrier);sv('f-acn',advClaim);sv('f-pl',limits);sv('f-afp',atFault);
+  sv('f-aacc',advCarrier);sv('f-aaccn',advClaim);sv('f-apl',limits);sv('f-aafp',atFault);
+  sv('f-ref',src.referral);pc=[sourceId];renderLinkedCompanions();const banner=document.getElementById('prefill-banner');document.getElementById('prefill-banner-text').textContent='Accident details pre-filled from '+src.client.fname+' '+src.client.lname+"'s intake.";banner.style.display='flex';window.scrollTo({top:0,behavior:'smooth'});};
+window.clearPrefill=()=>{pfs=null;document.getElementById('prefill-banner').style.display='none';};
+
+window.saveIntake=async()=>{
+  const fn=g('f-fn').trim(),ln=g('f-ln').trim();if(!fn&&!ln){alert('Please enter a client name.');return;}
+  const hasBi=document.getElementById('cb-bi').checked,hasPd=document.getElementById('cb-pd').checked;
+  if(!hasBi&&!hasPd){document.getElementById('case-type-warn').style.display='block';return;}
+  const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Saving...';
+  const today=new Date().toISOString().slice(0,10);
+  const caseType=hasBi&&hasPd?'BI+PD':hasBi?'BI':'PD';
+  const intake={type:caseType,date:g('f-idate')||today,status:g('f-st')||'Intaked',referral:g('f-ref'),notes:g('f-notes'),companions:[...pc],enteredBy:cup?.name||cu?.email||'',client:{fname:fn,lname:ln,dob:g('f-dob'),phone:g('f-ph'),email:g('f-em'),address:g('f-addr'),pref:g('f-cp')},files:{dl:uf.dl.map(f=>({name:f.name,type:f.type,data:f.data})),reg:uf.reg.map(f=>({name:f.name,type:f.type,data:f.data})),photos:uf.photos.map(f=>({name:f.name,type:f.type,data:f.data})),videos:uf.videos.map(f=>({name:f.name,type:f.type,data:f.data}))},createdAt:serverTimestamp()};
+  if(hasBi){intake.bi={accDate:g('f-ad'),accType:g('f-at'),location:g('f-al'),police:g('f-pr'),policeNum:g('f-prn'),narrative:g('f-ln2'),vYear:g('f-vy'),vMake:g('f-vm'),vModel:g('f-vmo'),vin:g('f-vin'),ownership:g('f-vo'),lienholder:g('f-lh'),rental:g('f-rc'),clientCarrier:g('f-cc'),clientPolicy:g('f-cpn'),clientClaim:g('f-ccn'),advCarrier:g('f-ac'),advClaim:g('f-acn'),limits:g('f-pl'),atFault:g('f-afp'),er:g('f-er'),providers:g('f-tp'),txStatus:g('f-ts'),prior:g('f-pai'),injuries:g('f-inj'),employer:g('f-emp'),occupation:g('f-occ'),wages:g('f-lw'),timeMissed:g('f-tm')};}
+  if(hasPd){intake.auto={accDate:g('f-pd-ad'),accType:g('f-pd-at'),location:g('f-pd-al'),police:g('f-pd-pr'),policeNum:g('f-pd-prn'),narrative:g('f-pd-ln2'),year:g('f-avy'),make:g('f-avm'),model:g('f-avmo'),vin:g('f-avin'),ownership:g('f-avo'),lienholder:g('f-alh'),rentalCo:g('f-arc'),bodyShop:g('f-bs'),bodyShopAddr:g('f-bsa'),dropOff:g('f-bsd'),release:g('f-bsr'),daysInShop:g('f-bsdays'),rentalProvided:g('f-bsrental'),damage:g('f-add'),clientCarrier:g('f-acc'),clientPolicy:g('f-acpn'),clientClaim:g('f-accn'),advCarrier:g('f-aacc'),advClaim:g('f-aaccn'),limits:g('f-apl'),atFault:g('f-aafp'),estimate:g('f-aest')};}
+  try{const dr=await addDoc(collection(db,'intakes'),intake);for(const cid of pc){const cs=await getDoc(doc(db,'intakes',cid));if(cs.exists()){const ex=cs.data().companions||[];if(!ex.includes(dr.id))await updateDoc(doc(db,'intakes',cid),{companions:[...ex,dr.id]});}}flash('sb',true);resetForm();}catch(e){console.error(e);flash('eb',true);}
+  btn.disabled=false;btn.textContent='Save intake';
+};
+
+function resetForm(){['f-fn','f-ln','f-ph','f-em','f-addr','f-ref','f-prn','f-al','f-ln2','f-vy','f-vm','f-vmo','f-vin','f-lh','f-rc','f-cc','f-cpn','f-ccn','f-ac','f-acn','f-pl','f-afp','f-er','f-tp','f-inj','f-emp','f-occ','f-tm','f-notes','f-dob','f-ad','f-pd-ad','f-pd-al','f-pd-prn','f-pd-ln2','f-avy','f-avm','f-avmo','f-avin','f-alh','f-arc','f-bs','f-bsa','f-bsdays','f-add','f-acc','f-acpn','f-accn','f-aacc','f-aaccn','f-apl','f-aafp','f-aest'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-idate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('cb-bi').checked=true;document.getElementById('cb-pd').checked=false;
+  document.getElementById('bi-section').style.display='';document.getElementById('pd-section').style.display='none';
+  document.getElementById('case-type-warn').style.display='none';
+  uf={dl:[],reg:[],photos:[],videos:[]};['dl-preview','reg-preview','photo-preview','video-preview'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});['dl-count','reg-count','photo-count','video-count'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});document.getElementById('video-warn').style.display='none';pc=[];pfs=null;document.getElementById('linked-companions').innerHTML='';document.getElementById('companion-search').value='';document.getElementById('companion-results').style.display='none';document.getElementById('prefill-banner').style.display='none';}
+
+function subscribeIntakes(){if(unsub){unsub();unsub=null;}unsub=onSnapshot(query(collection(db,'intakes'),orderBy('createdAt','desc')),snap=>{intakes=snap.docs.map(d=>({id:d.id,...d.data()}));if(document.getElementById('staff-dash').style.display!=='none')renderDash();});}
+
+function renderDash(){const tf=g('fl-type'),sf=g('fl-status'),list=intakes.filter(i=>(!tf||i.type===tf||i.type==='BI+PD')&&(!sf||i.status===sf));const tot=intakes.length,bi=intakes.filter(i=>i.type==='BI'||i.type==='BI+PD').length,pd=intakes.filter(i=>i.type==='PD'||i.type==='BI+PD').length,ret=intakes.filter(i=>i.status==='Retained').length;document.getElementById('met-row').innerHTML=`<div class="met"><div class="mv">${tot}</div><div class="ml">Total intakes</div></div><div class="met"><div class="mv">${bi}</div><div class="ml">Bodily injury</div></div><div class="met"><div class="mv">${pd}</div><div class="ml">Property damage</div></div><div class="met"><div class="mv">${ret}</div><div class="ml">Retained</div></div>`;const el=document.getElementById('dash-list');if(!list.length){el.innerHTML='<div class="empty">No intakes found.</div>';return;}el.innerHTML=list.map(i=>{const fc=Object.values(i.files||{}).flat().length,cc=(i.companions||[]).length;const typeBadge=i.type==='BI+PD'?`<span class="badge bi">BI</span> <span class="badge pd">PD</span>`:i.type==='BI'?`<span class="badge bi">BI</span>`:`<span class="badge pd">PD</span>`;return`<div class="row ${rc(i.status)}"><div style="flex:1"><div class="rn">${i.client.fname} ${i.client.lname}</div><div class="rm">${i.date} &bull; ${i.referral||'No referral'} &bull; ${i.client.phone||i.client.email||''}${fc?' &bull; '+fc+' file'+(fc>1?'s':''):''}${cc?' &bull; '+cc+' companion'+(cc>1?'s':''):''}${i.enteredBy?' &bull; '+i.enteredBy:''}</div><div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">${typeBadge}<span class="badge ${sc(i.status)}">${i.status}</span>${cc?`<span class="companion-badge">&#128101; ${cc} companion${cc>1?'s':''}</span>`:''}</div></div><div class="ra"><select onchange="updStatus('${i.id}',this.value)" style="font-size:11px;padding:4px 6px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select><button class="btn" style="font-size:11px;padding:5px 10px" onclick="viewIntake('${i.id}','staff')">View</button><button class="btn" style="font-size:11px;padding:5px 10px;color:#5b21b6;border-color:#c4b5fd" onclick="createCompanionFrom('${i.id}')">+ Companion</button><button class="btn-d" onclick="delIntake('${i.id}')">Delete</button></div></div>`;}).join('');document.getElementById('detail-panel').style.display='none';}
+
+window.updStatus=async(id,s)=>{try{await updateDoc(doc(db,'intakes',id),{status:s});}catch(e){console.error(e);}};
+window.delIntake=async id=>{if(!confirm('Delete this intake? This cannot be undone.'))return;try{const snap=await getDoc(doc(db,'intakes',id));if(snap.exists()){for(const cid of(snap.data().companions||[])){const cs=await getDoc(doc(db,'intakes',cid));if(cs.exists())await updateDoc(doc(db,'intakes',cid),{companions:(cs.data().companions||[]).filter(x=>x!==id)});}}await deleteDoc(doc(db,'intakes',id));}catch(e){console.error(e);}};
+
+function buildDetailHTML(i,ctx){let rows='';const r=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:'';rows+=r('Client',`${i.client.fname} ${i.client.lname}`);rows+=r('DOB',i.client.dob);rows+=r('Phone',i.client.phone);rows+=r('Email',i.client.email);rows+=r('Address',i.client.address);rows+=r('Preferred contact',i.client.pref);rows+=r('Referral source',i.referral);rows+=r('Intake date',i.date);rows+=r('Status',i.status);if(ctx==='staff')rows+=r('Entered by',i.enteredBy);if(i.companions&&i.companions.length){const links=i.companions.map(cid=>{const ci=intakes.find(x=>x.id===cid);return ci?`<span class="companion-badge" onclick="viewIntake('${cid}','${ctx}')">${ci.client.fname} ${ci.client.lname}</span>`:''}).join(' ');rows+=`<dt>Companion cases</dt><dd style="padding-top:4px">${links}${ctx==='staff'?` <button class="btn" style="font-size:11px;padding:3px 8px;margin-left:6px" onclick="createCompanionFrom('${i.id}')">+ Add</button>`:''}</dd>`;}else if(ctx==='staff'&&i.type==='BI'){rows+=`<dt>Companion cases</dt><dd><button class="btn" style="font-size:11px;padding:3px 8px" onclick="createCompanionFrom('${i.id}')">+ Create companion intake</button></dd>`;}
+if(i.bi){rows+=r('Accident date',i.bi.accDate);rows+=r('Type',i.bi.accType);rows+=r('Location',i.bi.location);rows+=r('Police report',i.bi.police+(i.bi.policeNum?' #'+i.bi.policeNum:''));rows+=r('Narrative',i.bi.narrative);rows+=r('Vehicle',[i.bi.vYear,i.bi.vMake,i.bi.vModel].filter(Boolean).join(' '));rows+=r('VIN',i.bi.vin);rows+=r('Ownership',i.bi.ownership);rows+=r('Lienholder',i.bi.lienholder);rows+=r('Client carrier',i.bi.clientCarrier+(i.bi.clientPolicy?' / '+i.bi.clientPolicy:'')+(i.bi.clientClaim?' / Claim: '+i.bi.clientClaim:''));rows+=r('Adverse carrier',i.bi.advCarrier+(i.bi.advClaim?' / Claim: '+i.bi.advClaim:''));rows+=r('Policy limits',i.bi.limits);rows+=r('At-fault party',i.bi.atFault);rows+=r('ER / hospital',i.bi.er);rows+=r('Providers',i.bi.providers);rows+=r('Treatment status',i.bi.txStatus);rows+=r('Prior accidents',i.bi.prior);rows+=r('Injuries',i.bi.injuries);rows+=r('Employer',i.bi.employer);rows+=r('Occupation',i.bi.occupation);rows+=r('Lost wages',i.bi.wages);rows+=r('Time missed',i.bi.timeMissed);}
+if(i.pd){rows+=r('Property',i.pd.propAddr);rows+=r('Type',i.pd.propType);rows+=r('Owner',i.pd.owner);rows+=r('Date of loss',i.pd.lossDate);rows+=r('Cause',i.pd.cause);rows+=r('Carrier',i.pd.carrier+(i.pd.policyNum?' / '+i.pd.policyNum:'')+(i.pd.claimNum?' / Claim: '+i.pd.claimNum:''));rows+=r('Claim status',i.pd.claimStatus);rows+=r('Amount paid',i.pd.amtPaid);rows+=r('Public adjuster',i.pd.pa+(i.pd.paName?' — '+i.pd.paName:''));rows+=r('Damage',i.pd.damage);rows+=r('Contractor',i.pd.contractor+(i.pd.contractorName?' — '+i.pd.contractorName:''));rows+=r('Adjuster',i.pd.adjuster);}
+if(i.auto){rows+=r('Accident date',i.auto.accDate);rows+=r('Type',i.auto.accType);rows+=r('Location',i.auto.location);rows+=r('Police report',i.auto.police+(i.auto.policeNum?' #'+i.auto.policeNum:''));rows+=r('Narrative',i.auto.narrative);rows+=r('Vehicle',[i.auto.year,i.auto.make,i.auto.model].filter(Boolean).join(' '));rows+=r('VIN',i.auto.vin);rows+=r('Ownership',i.auto.ownership);rows+=r('Lienholder',i.auto.lienholder);rows+=r('Body shop',i.auto.bodyShop+(i.auto.bodyShopAddr?' — '+i.auto.bodyShopAddr:''));rows+=r('Dropped off',i.auto.dropOff);rows+=r('Released',i.auto.release);rows+=r('Days in shop',i.auto.daysInShop);rows+=r('Rental provided',i.auto.rentalProvided);rows+=r('Damage',i.auto.damage);rows+=r('Client carrier',i.auto.clientCarrier+(i.auto.clientPolicy?' / '+i.auto.clientPolicy:'')+(i.auto.clientClaim?' / Claim: '+i.auto.clientClaim:''));rows+=r('Adverse carrier',i.auto.advCarrier+(i.auto.advClaim?' / Claim: '+i.auto.advClaim:''));rows+=r('Policy limits',i.auto.limits);rows+=r('At-fault party',i.auto.atFault);rows+=r('Estimate',i.auto.estimate);}
+if(i.files){const fSec=(label,files)=>{if(!files||!files.length)return'';return`<dt>${label}</dt><dd style="padding-top:4px">${files.map(f=>f.type&&f.type.startsWith('image/')?`<img src="${f.data}" class="img-thumb-view" title="${f.name}">`:`<span style="font-size:12px;color:#666;margin:3px 8px 3px 0">${f.name}</span>`).join('')}</dd>`;};rows+=fSec("Driver's license",i.files.dl);rows+=fSec('Vehicle registration',i.files.reg);rows+=fSec('Photos',i.files.photos);if(i.files.videos&&i.files.videos.length)rows+=r('Videos',i.files.videos.map(f=>f.name).join(', '));}
+if(ctx==='staff'&&i.notes)rows+=r('Internal notes',i.notes);return rows;}
+
+window.viewIntake=(id,ctx)=>{const i=intakes.find(x=>x.id===id);if(!i)return;const panelId=ctx==='staff'?'detail-panel':'ref-detail-panel';const panel=document.getElementById(panelId);const tb=i.type==='BI+PD'?`<span class="badge bi">BI</span>&nbsp;<span class="badge pd">PD</span>`:i.type==='BI'?`<span class="badge bi">BI</span>`:`<span class="badge pd">PD</span>`;panel.style.display='block';panel.innerHTML=`<div class="detail-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div><span style="font-weight:700;font-size:15px">${i.client.fname} ${i.client.lname}</span>&nbsp;${tb}&nbsp;<span class="badge ${sc(i.status)}">${i.status}</span>${(i.companions&&i.companions.length)?'&nbsp;<span class="companion-badge">&#128101; '+i.companions.length+' companion'+(i.companions.length>1?'s':'')+'</span>':''}</div><div style="display:flex;gap:6px;align-items:center">${ctx==='staff'?`<select onchange="updStatus('${i.id}',this.value)" style="font-size:12px;padding:5px 8px">${['Intaked','Contacted','Retained','Not Moving Forward'].map(s=>`<option${s===i.status?' selected':''}>${s}</option>`).join('')}</select>`:''}<button class="btn" onclick="document.getElementById('${panelId}').style.display='none'">Close</button></div></div><dl class="dl-grid">${buildDetailHTML(i,ctx)}</dl></div>`;panel.scrollIntoView({behavior:'smooth',block:'start'});};
+
+async function loadRefAccounts(){const snap=await getDocs(collection(db,'referralAccounts'));refAccounts=snap.docs.map(d=>({uid:d.id,...d.data()}));renderRefList();}
+function renderRefList(){const el=document.getElementById('ref-list');if(!refAccounts.length){el.innerHTML='<div class="empty">No referral accounts yet.</div>';return;}el.innerHTML=refAccounts.map(r=>`<div class="row"><div style="flex:1"><div class="rn">${r.name}</div><div class="rm">${r.email} &bull; ${intakes.filter(i=>i.referral&&i.referral.toLowerCase()===r.name.toLowerCase()).length} intakes linked</div></div><div class="ra"><button class="btn-d" onclick="delRef('${r.uid}')">Delete</button></div></div>`).join('');}
+window.addRef=async()=>{
+  const name=g('rn-name').trim(),email=g('rn-email').trim(),pass=g('rn-pass').trim();
+  const msgEl=document.getElementById('ref-msg');if(!name||!email||!pass){alert('Please fill in all three fields.');return;}
+  const btn=document.getElementById('ref-create-btn');btn.disabled=true;btn.textContent='Creating...';
+  msgEl.style.display='block';msgEl.style.color='#888';msgEl.textContent='Creating account...';
+  try{
+    const savedEmail=cu.email;
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await setDoc(doc(db,'referralAccounts',cred.user.uid),{name,email,createdAt:serverTimestamp()});
+    const staffPass=prompt('To stay logged in as staff, please re-enter your own password:');
+    if(staffPass)await signInWithEmailAndPassword(auth,savedEmail,staffPass);
+    msgEl.style.color='#0d6e4f';msgEl.textContent='Account created for '+name+'!';
+    ['rn-name','rn-email','rn-pass'].forEach(id=>document.getElementById(id).value='');
+    await loadRefAccounts();setTimeout(()=>msgEl.style.display='none',4000);
+  }catch(e){msgEl.style.color='#c0392b';msgEl.textContent=e.code==='auth/email-already-in-use'?'That email already has an account.':'Error: '+e.message;}
+  btn.disabled=false;btn.textContent='Create account';
+};
+window.delRef=async uid=>{if(!confirm('Delete this referral account?'))return;try{await deleteDoc(doc(db,'referralAccounts',uid));refAccounts=refAccounts.filter(r=>r.uid!==uid);renderRefList();}catch(e){alert('Error: '+e.message);}};
+
+async function loadAdminData(){
+  const snap=await getDocs(collection(db,'staff'));
+  const all=snap.docs.map(d=>({uid:d.id,...d.data()}));
+  const pending=all.filter(s=>s.approved===false);
+  const active=all.filter(s=>s.approved!==false);
+  const pendingEl=document.getElementById('admin-pending-list');
+  if(!pending.length){pendingEl.innerHTML='<div class="empty">No pending approvals.</div>';}
+  else{pendingEl.innerHTML=pending.map(s=>`<div class="row" style="border-left:4px solid #ef4444;border-radius:0 10px 10px 0"><div style="flex:1"><div class="rn">${s.name}<span class="pending-badge">Pending</span></div><div class="rm">${s.email}</div></div><div class="ra"><button class="btn-g" onclick="approveStaff('${s.uid}','${s.name}')">Approve</button><button class="btn-d" onclick="denyStaff('${s.uid}','${s.name}')">Deny</button></div></div>`).join('');}
+  const activeEl=document.getElementById('admin-staff-list');
+  if(!active.length){activeEl.innerHTML='<div class="empty">No active staff.</div>';}
+  else{activeEl.innerHTML=active.map(s=>`<div class="row"><div style="flex:1"><div class="rn">${s.name||s.email}${s.isAdmin?'<span class="admin-badge">Admin</span>':''}</div><div class="rm">${s.email}</div></div><div class="ra">${!s.isAdmin?`<button class="btn-d" onclick="revokeStaff('${s.uid}','${s.name}')">Revoke access</button>`:'<span style="font-size:11px;color:#888">Protected</span>'}</div></div>`).join('');}
+  const cs=await getDoc(doc(db,'appSettings','config'));
+  document.getElementById('admin-code-display').value=cs.exists()?(cs.data().inviteCode||'SUNSHINE2024'):'SUNSHINE2024';
+}
+window.approveStaff=async(uid,name)=>{if(!confirm('Approve '+name+'? They will be able to log in immediately.'))return;try{await updateDoc(doc(db,'staff',uid),{approved:true});loadAdminData();}catch(e){alert('Error: '+e.message);}};
+window.denyStaff=async(uid,name)=>{if(!confirm('Deny and delete '+name+"'s account?"))return;try{await deleteDoc(doc(db,'staff',uid));loadAdminData();}catch(e){alert('Error: '+e.message);}};
+window.revokeStaff=async(uid,name)=>{if(!confirm('Revoke access for '+name+'? They will no longer be able to log in.'))return;try{await updateDoc(doc(db,'staff',uid),{approved:false});loadAdminData();}catch(e){alert('Error: '+e.message);}};
+window.updateInviteCode=async()=>{const newCode=g('admin-new-code').trim(),msgEl=document.getElementById('admin-code-msg');if(!newCode){alert('Please enter a new invite code.');return;}try{await setDoc(doc(db,'appSettings','config'),{inviteCode:newCode},{merge:true});document.getElementById('admin-code-display').value=newCode;document.getElementById('admin-new-code').value='';msgEl.style.display='block';msgEl.style.color='#0d6e4f';msgEl.textContent='Invite code updated!';setTimeout(()=>msgEl.style.display='none',3000);}catch(e){msgEl.style.display='block';msgEl.style.color='#c0392b';msgEl.textContent='Error: '+e.message;}};
+
+function loadRefPortal(refName){onSnapshot(query(collection(db,'intakes'),where('referral','==',refName),orderBy('createdAt','desc')),snap=>{intakes=snap.docs.map(d=>({id:d.id,...d.data()}));renderRefPortal();});}
+function renderRefPortal(){const tot=intakes.length,newC=intakes.filter(i=>i.status==='Intaked').length,cont=intakes.filter(i=>i.status==='Contacted').length,ret=intakes.filter(i=>i.status==='Retained').length;document.getElementById('ref-met-row').innerHTML=`<div class="met"><div class="mv">${tot}</div><div class="ml">Total referred</div></div><div class="met"><div class="mv">${newC}</div><div class="ml">Intaked</div></div><div class="met"><div class="mv">${cont}</div><div class="ml">Contacted</div></div><div class="met"><div class="mv">${ret}</div><div class="ml">Retained</div></div>`;const el=document.getElementById('ref-intake-list');if(!intakes.length){el.innerHTML='<div class="empty">No intakes on file for your account yet.</div>';return;}el.innerHTML=intakes.map(i=>{const fc=Object.values(i.files||{}).flat().length,cc=(i.companions||[]).length;return`<div class="row ${rc(i.status)}"><div style="flex:1"><div class="rn">${i.client.fname} ${i.client.lname}</div><div class="rm">${i.date} &bull; ${i.client.phone||i.client.email||''}${fc?' &bull; '+fc+' file'+(fc>1?'s':''):''}${cc?' &bull; '+cc+' companion'+(cc>1?'s':''):''}</div><div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap"><span class="badge ${i.type.toLowerCase()}">${i.type}${i.pdSub==='auto'?' &mdash; Auto':''}</span><span class="badge ${sc(i.status)}">${i.status}</span>${cc?`<span class="companion-badge">&#128101; ${cc} companion${cc>1?'s':''}</span>`:''}</div></div><div class="ra"><button class="btn" style="font-size:11px;padding:5px 10px" onclick="viewIntake('${i.id}','ref')">View</button></div></div>`;}).join('');document.getElementById('ref-detail-panel').style.display='none';}
+document.getElementById('f-idate').value=new Date().toISOString().slice(0,10);
+setTimeout(()=>{const ls=document.getElementById('screen-loading');if(ls&&ls.style.display!=='none'){showScreen('staff-login');}},8000);
+</script>
+</body>
+</html>
